@@ -1,0 +1,39 @@
+li {
+  list-style: none;
+}
+
+.carousel-container {
+  max-width: 300px;
+  overflow: hidden;
+}
+.box-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  width: 300px;
+  height: 300px;
+  border: 1px solid black;
+  padding: 0;
+  transition: all 0.3s ease-out;
+}
+
+.box-wrapper > li > div {
+  width: 300px;
+  height: 300px;
+}
+
+.green {
+  background-color: green;
+}
+.red {
+  background-color: red;
+}
+.purple {
+  background-color: purple;
+}
+.blue {
+  background-color: blue;
+}
+.orange {
+  background-color: orange;
+}
