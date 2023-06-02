@@ -3,14 +3,14 @@ import Component from "../core/Component.js";
 export default class NewCarousel extends Component {
   setup() {
     this.state = 0;
-    this.arr = ["green", "red", "blue", "orange", "purple"];
+    this.colorArr = ["green", "red", "blue", "orange", "purple"];
   }
 
   template() {
     return `
     <ul style="transform: translateX(${this.state}px)" class="box-wrapper">
-    ${this.arr
-      .map((n, i) => `<li><div class=${this.arr[i]}></div></li>`)
+    ${this.colorArr
+      .map((n, i) => `<li><div class=${this.colorArr[i]}></div></li>`)
       .join("")}
     </ul>
     <button class="increaseIndex"><</button>
@@ -20,9 +20,9 @@ export default class NewCarousel extends Component {
   }
 
   setEvent() {
-    const boxQty = this.arr.length - 1;
+    const colorQty = this.colorArr.length - 1;
     const boxWidth = 300;
-
+    // 좌로 이동
     this.target
       .querySelector(".increaseIndex")
       .addEventListener("click", () => {
@@ -33,16 +33,18 @@ export default class NewCarousel extends Component {
           ).style.transform = `translateX(${this.state}px)`;
         }
       });
-
+    // 우로 이동
     this.target
       .querySelector(".decreaseIndex")
       .addEventListener("click", () => {
-        if (this.state !== -boxQty * boxWidth) {
+        if (this.state !== -colorQty * boxWidth) {
           this.state = this.state - boxWidth;
           this.target.querySelector(
             ".box-wrapper"
           ).style.transform = `translateX(${this.state}px)`;
-        } else if (this.state === -boxQty * boxWidth) {
+
+          //가장 우측 컨텐츠가 보인 후 첫번째 컨텐츠로 이동
+        } else if (this.state === -colorQty * boxWidth) {
           this.state = 0;
           this.target.querySelector(".box-wrapper").style.transform =
             "translateX(0px)";
