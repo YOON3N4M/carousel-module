@@ -5,8 +5,10 @@ export default class NewCarousel {
     this.colorArr = ["green", "red", "blue", "orange", "purple"];
     this.activeIndex = 0;
     this.lastIndex = this.colorArr.length - 1;
+    this.activeDot = 0;
     this.render();
     this.template();
+    this.controlIndicator(0);
   }
 
   template() {
@@ -18,14 +20,30 @@ export default class NewCarousel {
       .map((n, i) => `<li><div class=${this.colorArr[i]}></div></li>`)
       .join("")}
     </ul>
+    
+    <div class="navigation">
     <button data-direction="prev" class="prev"><</button>
+    <ul class="dot-indicator">
+    ${this.colorArr.map(() => `<div class="dot"></div>`).join("")}
+    </ul>
     <button data-direction="next" class="next">></button>
+    </div>
+   
+   
+ 
+
     `;
   }
 
   render() {
     this.target.innerHTML = this.template();
     this.addEvent();
+  }
+
+  controlIndicator(direction, prevActive) {
+    const dotIndicator = this.target.querySelector(".dot-indicator");
+    const dotArr = dotIndicator.childNodes;
+    console.log(dotArr);
   }
 
   next(carouselWrapper) {
@@ -36,8 +54,12 @@ export default class NewCarousel {
       }%)`;
     } else if (this.activeIndex === this.lastIndex) {
       this.activeIndex = 0;
+      this.activeDot = 0;
       carouselWrapper.style.transform = `translateX(0%)`;
     }
+
+    this.activeDot++;
+    this.controlIndicator(+1, this.activeDot - 1);
   }
 
   prev(carouselWrapper) {
@@ -50,6 +72,9 @@ export default class NewCarousel {
       this.activeIndex = this.lastIndex;
       carouselWrapper.style.transform = `translateX(${-this.lastIndex * 100}%)`;
     }
+
+    this.activeDot--;
+    this.controlIndicator(-1, this.activeDot + 1);
   }
 
   addEvent() {
