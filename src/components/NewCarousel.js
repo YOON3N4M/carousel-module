@@ -31,7 +31,6 @@ export default class NewCarousel {
   next(carouselWrapper) {
     if (this.activeIndex < this.lastIndex) {
       this.activeIndex++;
-      console.log(this.activeIndex);
       carouselWrapper.style.transform = `translateX(-${
         100 * this.activeIndex
       }%)`;
@@ -39,7 +38,6 @@ export default class NewCarousel {
       this.activeIndex = 0;
       carouselWrapper.style.transform = `translateX(0%)`;
     }
-    console.log(this.activeIndex, "rightClick");
   }
 
   prev(carouselWrapper) {
