@@ -1,57 +1,69 @@
-import Component from "../core/Component.js";
-
-export default class NewCarousel extends Component {
-  setup() {
-    this.state = 0;
+export default class NewCarousel {
+  constructor(target) {
+    this.target = target;
+    this.slidingdX = 0;
     this.colorArr = ["green", "red", "blue", "orange", "purple"];
+    this.activeIndex = 0;
+    this.lastIndex = this.colorArr.length - 1;
+    this.render();
+    this.template();
   }
 
   template() {
     return `
-    <ul style="transform: translateX(${this.state}px)" class="box-wrapper">
+    <ul style="transform: translateX(${
+      this.slidingdX
+    }px)" class="carousel-wrapper">
     ${this.colorArr
       .map((n, i) => `<li><div class=${this.colorArr[i]}></div></li>`)
       .join("")}
     </ul>
-    <button data-direction="next" class="arrow"><</button>
-    <button  data-direction="prev" class="arrow">></button>
-    <h1>${this.state}</h1>
+    <button data-direction="prev" class="prev"><</button>
+    <button data-direction="next" class="next">></button>
     `;
   }
 
-  setEvent() {
-    const lastIndex = this.colorArr.length - 1;
-    const boxWidth = 300;
-    // 좌로 이동
-    this.target.querySelector(".nextIndex").addEventListener("click", () => {
-      if (this.state !== 0) {
-        this.state = this.state + boxWidth;
-        this.target.querySelector(
-          ".box-wrapper"
-        ).style.transform = `translateX(${this.state}px)`;
-      } else if (this.state === 0) {
-        this.state = -lastIndex * boxWidth;
-        this.target.querySelector(
-          ".box-wrapper"
-        ).style.transform = `translateX(${-lastIndex * boxWidth}px)`;
-      }
-    });
-    // 우로 이동
-    this.target
-      .querySelector(".decreaseIndex")
-      .addEventListener("click", () => {
-        if (this.state !== -lastIndex * boxWidth) {
-          this.state = this.state - boxWidth;
-          this.target.querySelector(
-            ".box-wrapper"
-          ).style.transform = `translateX(${this.state}px)`;
+  render() {
+    this.target.innerHTML = this.template();
+    this.addEvent();
+  }
 
-          //가장 우측 컨텐츠가 보인 후 첫번째 컨텐츠로 이동
-        } else if (this.state === -lastIndex * boxWidth) {
-          this.state = 0;
-          this.target.querySelector(".box-wrapper").style.transform =
-            "translateX(0px)";
-        }
-      });
+  next(carouselWrapper) {
+    if (this.activeIndex < this.lastIndex) {
+      this.activeIndex++;
+      console.log(this.activeIndex);
+      carouselWrapper.style.transform = `translateX(-${
+        100 * this.activeIndex
+      }%)`;
+    } else if (this.activeIndex === this.lastIndex) {
+      this.activeIndex = 0;
+      carouselWrapper.style.transform = `translateX(0%)`;
+    }
+    console.log(this.activeIndex, "rightClick");
+  }
+
+  prev(carouselWrapper) {
+    if (this.activeIndex > 0) {
+      this.activeIndex--;
+      carouselWrapper.style.transform = `translateX(${
+        -this.activeIndex * 100
+      }%)`;
+    } else if (this.activeIndex === 0) {
+      this.activeIndex = this.lastIndex;
+      carouselWrapper.style.transform = `translateX(${-this.lastIndex * 100}%)`;
+    }
+  }
+
+  addEvent() {
+    const carouselWrapper = this.target.querySelector(".carousel-wrapper");
+    const prevBtn = this.target.querySelector(".prev");
+    const nextBtn = this.target.querySelector(".next");
+
+    prevBtn.addEventListener("click", () => {
+      this.prev(carouselWrapper);
+    });
+    nextBtn.addEventListener("click", () => {
+      this.next(carouselWrapper);
+    });
   }
 }
