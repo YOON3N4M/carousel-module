@@ -40,7 +40,7 @@ export default class NewCarousel {
     ${this.itemArr
       .map(
         (item, index) =>
-          `<li><div><sspan class="description">${item.description}</sspan><img class="item" src=${item.URL}/></div></li>`
+          `<li><div><span class="description">${item.description}</span><img class="item" src=${item.URL}/></div></li>`
       )
       .join("")}
     </ul>
