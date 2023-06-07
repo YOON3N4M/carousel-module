@@ -1,35 +1,16 @@
+/** newCaraousel(target, title) */
 export default class NewCarousel {
-  constructor(target) {
+  constructor(target, item) {
     this.target = target;
     this.slidingdX = 0;
-    this.itemArr = [
-      {
-        URL: "https://www.hyundai.com/static/images/model/sonata/23fl/mo/sonata_the_edge_highlights_design_m.jpg",
-        description: "Design",
-      },
-      {
-        URL: "https://www.hyundai.com/static/images/model/sonata/23fl/mo/sonata_the_edge_highlights_space_m.jpg",
-        description: "space",
-      },
-      {
-        URL: "https://www.hyundai.com/static/images/model/sonata/23fl/mo/sonata_the_edge_highlights_performance_m.jpg",
-        description: "performance",
-      },
-      {
-        URL: "https://www.hyundai.com/static/images/model/sonata/23fl/mo/sonata_the_edge_highlights_sonata_the_edge_m.jpg",
-        description: "SONATA The Edge",
-      },
-      {
-        URL: "https://www.hyundai.com/static/images/model/sonata/23fl/mo/sonata_the_edge_highlights_n_line_m.jpg",
-        description: "N Line",
-      },
-    ];
+    this.itemArr = item;
     this.activeIndex = 0;
     this.lastIndex = this.itemArr.length - 1;
     this.activeDot = 0;
     this.render();
     this.template();
     this.controlIndicator(0);
+    console.log("dd");
   }
 
   template() {
@@ -43,18 +24,14 @@ export default class NewCarousel {
           `<li><div><span class="description">${item.description}</span><img class="item" src=${item.URL}/></div></li>`
       )
       .join("")}
-    </ul>
-    <div class="navigation">
-    <button data-direction="prev" class="prev"><</button>
-    <ul class="dot-indicator">
-    ${this.itemArr.map(() => `<div class="dot"></div>`).join("")}
-    </ul>
-    <button data-direction="next" class="next">></button>
-    </div>
-   
-   
- 
-
+      </ul>
+      <div class="navigation">
+      <button data-direction="prev" class="prev"><</button>
+      <ul class="dot-indicator">
+      ${this.itemArr.map(() => `<div class="dot"></div>`).join("")}
+     </ul>
+      <button data-direction="next" class="next">></button>
+      </div>
     `;
   }
 
@@ -89,7 +66,6 @@ export default class NewCarousel {
       this.activeDot = 0;
       carouselWrapper.style.transform = `translateX(0%)`;
     }
-
     this.controlIndicator(this.activeDot);
   }
 
