@@ -40,10 +40,18 @@ export default class NewCarousel {
     this.addEvent();
   }
 
-  controlIndicator(direction, prevActive) {
+  controlIndicator(direction) {
     const dotIndicator = this.target.querySelector(".dot-indicator");
+    //배열 dotArr에 불필요한 첫번째, 마지막 요소가 존재함. 그러므로 사용할 인덱스는 1부터  this.lastIndex까지
+    const fixedActiveDot = direction + 1;
     const dotArr = dotIndicator.childNodes;
-    console.log(dotArr);
+    const dotToDelete = this.target.querySelector(".active");
+
+    if (dotToDelete !== null) {
+      dotToDelete.className = "dot";
+    }
+
+    dotArr[fixedActiveDot].className += " active";
   }
 
   next(carouselWrapper) {
@@ -52,14 +60,14 @@ export default class NewCarousel {
       carouselWrapper.style.transform = `translateX(-${
         100 * this.activeIndex
       }%)`;
+      this.activeDot++;
     } else if (this.activeIndex === this.lastIndex) {
       this.activeIndex = 0;
       this.activeDot = 0;
       carouselWrapper.style.transform = `translateX(0%)`;
     }
 
-    this.activeDot++;
-    this.controlIndicator(+1, this.activeDot - 1);
+    this.controlIndicator(this.activeDot);
   }
 
   prev(carouselWrapper) {
@@ -68,13 +76,14 @@ export default class NewCarousel {
       carouselWrapper.style.transform = `translateX(${
         -this.activeIndex * 100
       }%)`;
+      this.activeDot--;
     } else if (this.activeIndex === 0) {
       this.activeIndex = this.lastIndex;
+      this.activeDot = this.lastIndex;
       carouselWrapper.style.transform = `translateX(${-this.lastIndex * 100}%)`;
     }
 
-    this.activeDot--;
-    this.controlIndicator(-1, this.activeDot + 1);
+    this.controlIndicator(this.activeDot);
   }
 
   addEvent() {
