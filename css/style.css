@@ -9,32 +9,29 @@ button {
   height: 17px;
 }
 .carousel-container {
-  max-width: 400px;
   overflow: hidden;
   margin: 0 auto;
 }
 .carousel-wrapper {
   display: flex;
   flex-direction: row;
-  height: 300px;
   border: 1px solid black;
   padding: 0;
   transition: all 0.3s ease-out;
 }
 
 .item {
-  width: 400px;
-  height: 300px;
   object-fit: cover;
 }
 .description {
   margin-top: 30px;
   margin-left: 30px;
   position: absolute;
-  text-align: center;
+  text-align: left;
   font-weight: bold;
   font-size: 2rem;
   color: white;
+  width: 100%;
 }
 
 .navigation {

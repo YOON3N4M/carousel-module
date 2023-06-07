@@ -6,8 +6,8 @@ class App {
     const hyundaiCarousel = document.querySelector(".hyundai");
     const palisadeCarousel = document.querySelector(".palisade");
 
-    new NewCarousel(hyundaiCarousel, hyundai);
-    new NewCarousel(palisadeCarousel, palisade);
+    new NewCarousel(hyundaiCarousel, hyundai, hyundaiCarousel.dataset.width);
+    new NewCarousel(palisadeCarousel, palisade, palisadeCarousel.dataset.width);
   }
 }
 

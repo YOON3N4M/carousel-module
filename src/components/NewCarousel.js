@@ -1,16 +1,22 @@
 /** newCaraousel(target, title) */
 export default class NewCarousel {
-  constructor(target, item) {
+  constructor(target, item, width) {
     this.target = target;
-    this.slidingdX = 0;
     this.itemArr = item;
+    this.width = width;
+    this.slidingdX = 0;
+
     this.activeIndex = 0;
     this.lastIndex = this.itemArr.length - 1;
     this.activeDot = 0;
+    this.init();
+  }
+
+  init() {
+    this.target.style.maxWidth = this.width;
     this.render();
     this.template();
     this.controlIndicator(0);
-    console.log("dd");
   }
 
   template() {
@@ -21,7 +27,7 @@ export default class NewCarousel {
     ${this.itemArr
       .map(
         (item, index) =>
-          `<li><div><span class="description">${item.description}</span><img class="item" src=${item.URL}/></div></li>`
+          `<li><div><span class="description">${item.description}</span><img style="width: ${this.width}" class="item" src=${item.URL}/></div></li>`
       )
       .join("")}
       </ul>
