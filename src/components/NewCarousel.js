@@ -75,29 +75,25 @@ export default class NewCarousel {
   next(carouselWrapper) {
     if (this.activeIndex < this.lastIndex) {
       this.activeIndex++;
-      carouselWrapper.style.transform = `translateX(-${
-        100 * this.activeIndex
-      }%)`;
+      this.sliding(carouselWrapper, -100 * this.activeIndex);
     } else if (this.activeIndex === this.lastIndex) {
       this.activeIndex = 0;
-      carouselWrapper.style.transform = `translateX(0%)`;
+      this.sliding(carouselWrapper, 0);
     }
-    this.controlIndicator(this.activeIndex);
   }
 
   prev(carouselWrapper) {
     if (this.activeIndex > 0) {
       this.activeIndex--;
-      carouselWrapper.style.transform = `translateX(${
-        -this.activeIndex * 100
-      }%)`;
+      this.sliding(carouselWrapper, -this.activeIndex * 100);
     } else if (this.activeIndex === 0) {
       this.activeIndex = this.lastIndex;
-      carouselWrapper.style.transform = `translateX(${-this.lastIndex * 100}%)`;
+      this.sliding(carouselWrapper, -this.lastIndex * 100);
     }
-
-    this.controlIndicator(this.activeIndex);
   }
 
-  sliding() {}
+  sliding(carouselWrapper, figure) {
+    carouselWrapper.style.transform = `translateX(${figure}%)`;
+    this.controlIndicator(this.activeIndex);
+  }
 }
