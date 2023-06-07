@@ -1,10 +1,17 @@
 li {
   list-style: none;
 }
-
+button {
+  border-radius: 50%;
+  border: 0px;
+  opacity: 0.6;
+  width: 17px;
+  height: 17px;
+}
 .carousel-container {
   max-width: 400px;
   overflow: hidden;
+  margin: 0 auto;
 }
 .carousel-wrapper {
   display: flex;
@@ -15,19 +22,32 @@ li {
   transition: all 0.3s ease-out;
 }
 
-.carousel-wrapper > li > img {
+.item {
   width: 400px;
   height: 300px;
   object-fit: cover;
 }
+.description {
+  margin-top: 30px;
+  margin-left: 30px;
+  position: absolute;
+  text-align: center;
+  font-weight: bold;
+  font-size: 2rem;
+  color: white;
+}
 
 .navigation {
+  position: absolute;
   display: flex;
   justify-content: space-between;
   flex-direction: row;
   box-sizing: content-box;
   margin: 0 auto;
-  width: 40%;
+  width: 250px;
+  left: 0;
+  right: 0;
+  margin-top: -50px;
 }
 .dot-indicator {
   display: flex;
@@ -46,7 +66,7 @@ li {
 }
 
 .active {
-  background-color: black;
+  background-color: white;
 }
 
 .green {
