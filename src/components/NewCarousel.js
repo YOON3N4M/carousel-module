@@ -2,9 +2,15 @@ export default class NewCarousel {
   constructor(target) {
     this.target = target;
     this.slidingdX = 0;
-    this.colorArr = ["green", "red", "blue", "orange", "purple"];
+    this.picURLArr = [
+      "https://www.hyundai.com/static/images/model/sonata/23fl/mo/sonata_the_edge_highlights_design_m.jpg",
+      "https://www.hyundai.com/static/images/model/sonata/23fl/mo/sonata_the_edge_highlights_space_m.jpg",
+      "https://www.hyundai.com/static/images/model/sonata/23fl/mo/sonata_the_edge_highlights_performance_m.jpg",
+      "https://www.hyundai.com/static/images/model/sonata/23fl/mo/sonata_the_edge_highlights_sonata_the_edge_m.jpg",
+      "https://www.hyundai.com/static/images/model/sonata/23fl/mo/sonata_the_edge_highlights_n_line_m.jpg",
+    ];
     this.activeIndex = 0;
-    this.lastIndex = this.colorArr.length - 1;
+    this.lastIndex = this.picURLArr.length - 1;
     this.activeDot = 0;
     this.render();
     this.template();
@@ -16,15 +22,13 @@ export default class NewCarousel {
     <ul style="transform: translateX(${
       this.slidingdX
     }px)" class="carousel-wrapper">
-    ${this.colorArr
-      .map((n, i) => `<li><div class=${this.colorArr[i]}></div></li>`)
-      .join("")}
+    ${this.picURLArr.map((n, i) => `<li><img src=${n}></img></li>`).join("")}
     </ul>
     
     <div class="navigation">
     <button data-direction="prev" class="prev"><</button>
     <ul class="dot-indicator">
-    ${this.colorArr.map(() => `<div class="dot"></div>`).join("")}
+    ${this.picURLArr.map(() => `<div class="dot"></div>`).join("")}
     </ul>
     <button data-direction="next" class="next">></button>
     </div>

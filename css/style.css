@@ -3,7 +3,7 @@ li {
 }
 
 .carousel-container {
-  max-width: 300px;
+  max-width: 400px;
   overflow: hidden;
 }
 .carousel-wrapper {
@@ -15,9 +15,10 @@ li {
   transition: all 0.3s ease-out;
 }
 
-.carousel-wrapper > li > div {
-  width: 300px;
+.carousel-wrapper > li > img {
+  width: 400px;
   height: 300px;
+  object-fit: cover;
 }
 
 .navigation {
@@ -26,7 +27,7 @@ li {
   flex-direction: row;
   box-sizing: content-box;
   margin: 0 auto;
-  width: 60%;
+  width: 40%;
 }
 .dot-indicator {
   display: flex;
