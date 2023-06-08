@@ -1,83 +1,71 @@
 li {
-  list-style: none;
+   list-style: none;
 }
 button {
-  border-radius: 50%;
-  border: 0px;
-  opacity: 0.6;
-  width: 17px;
-  height: 17px;
+   border: 0px;
+}
+.arrow {
+   border-radius: 50%;
+   border: 0px;
+   width: 17px;
+   height: 17px;
+   color: white;
+   background-color: rgba(240, 248, 255, 0);
+   cursor: pointer;
+   text-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
 }
 .carousel-container {
-  overflow: hidden;
-  margin: 0 auto;
+   overflow: hidden;
+   margin: 0 auto;
 }
 .carousel-wrapper {
-  display: flex;
-  flex-direction: row;
-
-  padding: 0;
-  transition: all 0.3s ease-out;
+   display: flex;
+   flex-direction: row;
+   padding: 0;
+   transition: all 0.3s ease-out;
 }
 
 .item {
-  object-fit: cover;
+   object-fit: cover;
 }
 .description {
-  margin-top: 30px;
-  margin-left: 30px;
-  position: absolute;
-  text-align: left;
-  font-weight: bold;
-  font-size: 2rem;
-  color: white;
-  width: 100%;
+   margin-top: 30px;
+   margin-left: 30px;
+   position: absolute;
+   text-align: left;
+   font-weight: bold;
+   font-size: 2rem;
+   color: white;
+   width: 100%;
 }
 
 .navigation {
-  position: absolute;
-  display: flex;
-  justify-content: space-between;
-  flex-direction: row;
-  box-sizing: content-box;
-  margin: 0 auto;
-  width: 250px;
-  left: 0;
-  right: 0;
-  margin-top: -50px;
+   position: absolute;
+   display: flex;
+   justify-content: space-between;
+   flex-direction: row;
+   box-sizing: content-box;
+   margin: 0 auto;
+   width: 250px;
+   left: 0;
+   right: 0;
+   margin-top: -50px;
 }
 .dot-indicator {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  padding: 0;
-  margin: 0 auto;
-  width: 60%;
-  align-items: center;
+   display: flex;
+   flex-direction: row;
+   justify-content: space-between;
+   padding: 0;
+   margin: 0 auto;
+   width: 60%;
+   align-items: center;
 }
 .dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: gray;
+   width: 10px;
+   height: 3px;
+   background-color: gray;
+   cursor: pointer;
 }
-
 .active {
-  background-color: white;
-}
-
-.green {
-  background-color: green;
-}
-.red {
-  background-color: red;
-}
-.purple {
-  background-color: purple;
-}
-.blue {
-  background-color: blue;
-}
-.orange {
-  background-color: orange;
+   background-color: white;
 }
