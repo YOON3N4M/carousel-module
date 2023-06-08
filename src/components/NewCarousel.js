@@ -5,11 +5,14 @@ export default class NewCarousel {
       this.itemArr = item;
       this.width = width;
       this.responsive = responsive;
+      //화면 분할 수를 partition으로 표현
       this.partition = partition;
       this.slidingdX = 0;
       this.activeIndex = 0;
       this.lastIndex = this.itemArr.length - 1;
       this.carouselWrapper;
+      this.startX;
+      this.endX;
       this.init();
    }
 
@@ -29,18 +32,15 @@ export default class NewCarousel {
    template() {
       const browserWidth = document.body.scrollWidth;
       const carouselContainerWidth = this.target.offsetWidth;
-      let isMobile;
       let itemWidth;
       let fixedArr;
 
       if (this.responsive && browserWidth >= 769) {
-         isMobile = false;
          itemWidth = carouselContainerWidth / this.partition;
          const dotQty = Math.ceil(this.itemArr.length / this.partition);
          fixedArr = this.itemArr.slice(0, dotQty);
          this.lastIndex = fixedArr.length - 1;
       } else {
-         isMobile = true;
          itemWidth = carouselContainerWidth;
          fixedArr = this.itemArr;
       }
@@ -85,6 +85,9 @@ export default class NewCarousel {
       for (var i = 0; i < dotBtnList.length; i++) {
          dotBtnList[i].addEventListener("click", event => this.onDotClick(event));
       }
+      //스와이프 기능
+      this.carouselWrapper.addEventListener("touchstart", event => this.touchStart(event));
+      this.carouselWrapper.addEventListener("touchend", event => this.touchEnd(event));
    }
 
    next() {
@@ -111,16 +114,16 @@ export default class NewCarousel {
       }
    }
 
+   sliding() {
+      this.carouselWrapper.style.transform = `translateX(${this.slidingdX}%)`;
+      this.controlIndicator();
+   }
+
    onDotClick(event) {
       const direction = event.target.dataset.index;
       this.activeIndex = parseInt(direction);
       this.slidingdX = -direction * 100;
       this.sliding();
-   }
-
-   sliding() {
-      this.carouselWrapper.style.transform = `translateX(${this.slidingdX}%)`;
-      this.controlIndicator();
    }
 
    controlIndicator() {
@@ -132,5 +135,19 @@ export default class NewCarousel {
          dotToDelete.className = "dot";
       }
       dotArr[this.activeIndex].className += " active";
+   }
+
+   touchStart(event) {
+      this.startX = event.changedTouches[0].pageX;
+   }
+
+   touchEnd(event) {
+      this.endX = event.changedTouches[0].pageX;
+      //터치가 끝날때 시작좌표, 끝좌표를 비교해서 방향감지
+      if (this.startX > this.endX) {
+         this.next();
+      } else {
+         this.prev();
+      }
    }
 }
