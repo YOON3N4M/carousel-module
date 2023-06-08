@@ -22,8 +22,8 @@ export default class NewCarousel {
 
    render() {
       this.target.innerHTML = this.template();
-      this.addEvent();
       this.carouselWrapper = this.target.querySelector(".carousel-wrapper");
+      this.addEvent();
    }
 
    template() {
@@ -90,31 +90,36 @@ export default class NewCarousel {
    next() {
       if (this.activeIndex < this.lastIndex) {
          this.activeIndex++;
-         this.sliding(-100 * this.activeIndex);
+         this.slidingdX = -100 * this.activeIndex;
+         this.sliding();
       } else if (this.activeIndex === this.lastIndex) {
          this.activeIndex = 0;
-         this.sliding(0);
+         this.slidingdX = 0;
+         this.sliding();
       }
    }
 
    prev() {
       if (this.activeIndex > 0) {
          this.activeIndex--;
-         this.sliding(-this.activeIndex * 100);
+         this.slidingdX = -this.activeIndex * 100;
+         this.sliding();
       } else if (this.activeIndex === 0) {
          this.activeIndex = this.lastIndex;
-         this.sliding(-this.lastIndex * 100);
+         this.slidingdX = -this.lastIndex * 100;
+         this.sliding();
       }
    }
 
    onDotClick(event) {
       const direction = event.target.dataset.index;
       this.activeIndex = parseInt(direction);
-      this.sliding(-direction * 100);
+      this.slidingdX = -direction * 100;
+      this.sliding();
    }
 
-   sliding(figure) {
-      this.carouselWrapper.style.transform = `translateX(${figure}%)`;
+   sliding() {
+      this.carouselWrapper.style.transform = `translateX(${this.slidingdX}%)`;
       this.controlIndicator();
    }
 
