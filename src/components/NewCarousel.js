@@ -1,9 +1,10 @@
 /** newCaraousel(target, title) */
 export default class NewCarousel {
-   constructor(target, item, width) {
+   constructor(target, item, width, responsive) {
       this.target = target;
       this.itemArr = item;
       this.width = width;
+      this.responsive = responsive;
       this.slidingdX = 0;
       this.activeIndex = 0;
       this.lastIndex = this.itemArr.length - 1;
@@ -13,7 +14,6 @@ export default class NewCarousel {
 
    init() {
       this.target.style.maxWidth = this.width;
-
       this.render();
       this.template();
       this.controlIndicator();
@@ -26,7 +26,25 @@ export default class NewCarousel {
    }
 
    template() {
-      console.log(this.width);
+      const browserWidth = document.body.scrollWidth;
+      const carouselContainerWidth = this.target.offsetWidth;
+      let isMobile;
+      let itemWidth;
+      let fixedArr;
+
+      if (this.responsive && browserWidth >= 769) {
+         isMobile = false;
+         // 유동적으로 바꾸는 기능을 구현하려면 해당 2를 새롭게 변수로 선언하면 됨.
+         itemWidth = carouselContainerWidth / 2;
+         const dotQty = Math.ceil(this.itemArr.length / 2);
+         fixedArr = this.itemArr.slice(0, dotQty);
+         this.lastIndex = fixedArr.length - 1;
+      } else {
+         isMobile = true;
+         itemWidth = carouselContainerWidth;
+         fixedArr = this.itemArr;
+      }
+
       return `
       <ul style="transform: translateX(${this.slidingdX}px)" class="carousel-wrapper">
       ${this.itemArr
@@ -36,7 +54,7 @@ export default class NewCarousel {
             <li>
               <div>
                 <span class="description">${item.description}</span>
-                <img style="width: ${this.width}" class="item" src=${item.URL}/>
+                <img style="width: ${itemWidth}px" class="item" src=${item.URL}/>
               </div>
             </li>
             `,
@@ -46,7 +64,7 @@ export default class NewCarousel {
       <div class="navigation">
         <button data-direction="prev" class="prev arrow"><</button>
         <ul class="dot-indicator">
-          ${this.itemArr.map((n, i) => `<button data-index=${i} class="dot"></button>`).join("")}
+          ${fixedArr.map((n, i) => `<button data-index=${i} class="dot"></button>`).join("")}
         </ul>
         <button data-direction="next" class="next arrow">></button>
       </div>

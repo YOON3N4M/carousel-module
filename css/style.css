@@ -46,7 +46,7 @@ button {
    flex-direction: row;
    box-sizing: content-box;
    margin: 0 auto;
-   width: 250px;
+   width: 40%;
    left: 0;
    right: 0;
    margin-top: -50px;
