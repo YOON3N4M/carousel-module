@@ -26,6 +26,7 @@ export default class NewCarousel {
    }
 
    template() {
+      console.log(this.width);
       return `
       <ul style="transform: translateX(${this.slidingdX}px)" class="carousel-wrapper">
       ${this.itemArr
@@ -90,7 +91,7 @@ export default class NewCarousel {
 
    onDotClick(event) {
       const direction = event.target.dataset.index;
-      this.activeIndex = direction;
+      this.activeIndex = parseInt(direction);
       this.sliding(-direction * 100);
    }
 
