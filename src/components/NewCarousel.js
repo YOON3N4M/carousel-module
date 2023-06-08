@@ -1,10 +1,11 @@
 /** newCaraousel(target, title) */
 export default class NewCarousel {
-   constructor(target, item, width, responsive) {
+   constructor(target, item, width, responsive, partition) {
       this.target = target;
       this.itemArr = item;
       this.width = width;
       this.responsive = responsive;
+      this.partition = partition;
       this.slidingdX = 0;
       this.activeIndex = 0;
       this.lastIndex = this.itemArr.length - 1;
@@ -34,9 +35,8 @@ export default class NewCarousel {
 
       if (this.responsive && browserWidth >= 769) {
          isMobile = false;
-         // 유동적으로 바꾸는 기능을 구현하려면 해당 2를 새롭게 변수로 선언하면 됨.
-         itemWidth = carouselContainerWidth / 2;
-         const dotQty = Math.ceil(this.itemArr.length / 2);
+         itemWidth = carouselContainerWidth / this.partition;
+         const dotQty = Math.ceil(this.itemArr.length / this.partition);
          fixedArr = this.itemArr.slice(0, dotQty);
          this.lastIndex = fixedArr.length - 1;
       } else {
