@@ -16,8 +16,9 @@ export default class NewCarousel {
       this.currentIsMobile;
       this.isMobile;
       this.target.style.maxWidth = this.width;
-      this.checkIsMobile();
-      this.carouselContainerWidth = this.target.offsetWidth;
+      this.currentWidth = window.outerWidth;
+      this.isMobileInit();
+
       this.init();
    }
 
@@ -37,7 +38,6 @@ export default class NewCarousel {
    }
 
    template() {
-      // const carouselContainerWidth = this.target.offsetWidth;
       let itemWidth;
       let fixedArr;
       /* 
@@ -103,9 +103,7 @@ export default class NewCarousel {
       this.carouselWrapper.addEventListener("touchstart", event => this.touchStart(event));
       this.carouselWrapper.addEventListener("touchend", event => this.touchEnd(event));
       //반응형 (PC-모바일 캐러셀 전환)
-      window.addEventListener("resize", () => {
-         this.checkIsMobile();
-      });
+      window.addEventListener("resize", () => this.onResizing());
    }
 
    next() {
@@ -166,30 +164,34 @@ export default class NewCarousel {
       }
    }
 
-   checkIsMobile() {
-      const currentWidth = window.outerWidth;
-      this.carouselContainerWidth = this.target.offsetWidth;
-      console.log(this.carouselContainerWidth);
+   isMobileInit() {
+      //크롬 개발자 도구에서 컨트롤 할 수 있는 값 기준
+      this.currentWidth = window.outerWidth;
+
       //초기 실행
-      if (currentWidth > 769 && this.currentIsMobile === undefined) {
+      if (this.currentWidth > 769 && this.currentIsMobile === undefined) {
          //pc
          this.currentIsMobile = false;
+         this.isMobile = false;
          console.log(this.currentIsMobile, "현재 PC상태 입니다.");
-      } else if (currentWidth < 769 && this.currentIsMobile === undefined) {
+      } else if (this.currentWidth < 769 && this.currentIsMobile === undefined) {
          //mobile
          this.currentIsMobile = true;
+         this.isMobile = true;
          console.log(this.currentIsMobile, "현재 모바일상태 입니다.");
       }
+   }
 
-      //변경 감지
-      if (currentWidth >= 769) {
+   onResizing() {
+      this.currentWidth = window.outerWidth;
+      //리사이증 변경 감지
+      if (this.currentWidth >= 769) {
          //pc
          this.isMobile = false;
-      } else if (currentWidth < 769) {
+      } else if (this.currentWidth < 769) {
          //mobile
          this.isMobile = true;
       }
-
       this.changeDevice();
    }
 
