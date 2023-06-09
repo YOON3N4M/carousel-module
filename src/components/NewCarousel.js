@@ -17,8 +17,8 @@ export default class NewCarousel {
       this.isMobile;
       this.target.style.maxWidth = this.width;
       this.currentWidth = window.outerWidth;
-      this.isMobileInit();
 
+      this.isMobileInit();
       this.init();
    }
 
