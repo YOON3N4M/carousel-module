@@ -43,10 +43,6 @@ export const third = [
    },
    {
       URL: "https://www.hyundai.com/static/images/model/sonata/23fl/sonata_the_edge_convenience_2nd_row_6_4_split_folding.jpg",
-      description: "서라운드 뷰 모니터",
-   },
-   {
-      URL: "https://www.hyundai.com/static/images/model/sonata/23fl/sonata_the_edge_convenience_2nd_row_6_4_split_folding.jpg",
       description: "동승석 전동시트",
    },
    {
@@ -54,7 +50,15 @@ export const third = [
       description: "주행 성능",
    },
    {
-      URL: "https://www.hyundai.com/static/images/model/sonata/23fl/sonata_the_edge_performance_ride_quality_improvement.jpg",
-      description: "승차감 개선",
+      URL: "https://www.hyundai.com/static/images/model/palisade/24my/palisade_performance_drive_multi_terrain_mode.jpg",
+      description: "드라이브 모드 / 험로 주행모드",
+   },
+   {
+      URL: "https://www.hyundai.com/static/images/model/palisade/24my/palisade_performance_drive_multi_terrain_mode.jpg",
+      description: "드라이브 모드 / 험로 주행모드",
+   },
+   {
+      URL: "https://www.hyundai.com/static/images/model/palisade/24my/palisade_performance_drive_multi_terrain_mode.jpg",
+      description: "드라이브 모드 / 험로 주행모드",
    },
 ];

@@ -1,6 +1,6 @@
 /** newCaraousel(target, title) */
 export default class NewCarousel {
-   constructor(target, item, width, isResponsive, partition) {
+   constructor(target, item, width, isResponsive, partition, pcSlideQty, mobileSlideQty) {
       this.target = target;
       this.itemArr = item;
       this.width = width;
@@ -17,7 +17,14 @@ export default class NewCarousel {
       this.isMobile;
       this.target.style.maxWidth = this.width;
       this.currentWidth = window.outerWidth;
-
+      this.pcSlideQty;
+      if (pcSlideQty !== undefined) {
+         this.pcSlideQty = pcSlideQty;
+      }
+      this.mobileSlideQty;
+      if (mobileSlideQty !== undefined) {
+         this.mobileSlideQty = mobileSlideQty;
+      }
       this.isMobileInit();
       this.init();
    }
@@ -51,10 +58,21 @@ export default class NewCarousel {
          itemWidth = this.width / this.partition;
          const dotQty = Math.ceil(this.itemArr.length / this.partition);
          fixedArr = this.itemArr.slice(0, dotQty);
+
+         if (this.pcSlideQty !== undefined) {
+            this.itemArr = this.itemArr.slice(0, this.pcSlideQty);
+
+            console.log(this.itemArr);
+         }
          this.lastIndex = fixedArr.length - 1;
       } else {
          itemWidth = this.width;
          fixedArr = this.itemArr;
+         if (this.pcSlideQty !== undefined) {
+            this.itemArr = this.itemArr.slice(0, this.mobileSlideQty);
+            console.log(this.itemArr);
+         }
+
          this.lastIndex = this.itemArr.length - 1;
       }
 
