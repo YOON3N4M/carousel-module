@@ -40,6 +40,12 @@ export default class NewCarousel {
       // const carouselContainerWidth = this.target.offsetWidth;
       let itemWidth;
       let fixedArr;
+      /* 
+      여기서 this.activeIndex를 0으로 초기화 시켜주지 않으면 모바일 버전에서 
+      최대 인덱스까지 옮긴 후 PC버전으로 변경 됐을때 PC버전엔 없는 index라서 에러가 남
+      때문에 모바일, PC 간 전환이 이루어지면 this.activeIndex를 초기화
+      */
+      this.activeIndex = 0;
 
       if (this.isResponsive && this.isMobile === false) {
          itemWidth = this.width / this.partition;
@@ -96,7 +102,7 @@ export default class NewCarousel {
       //스와이프 기능
       this.carouselWrapper.addEventListener("touchstart", event => this.touchStart(event));
       this.carouselWrapper.addEventListener("touchend", event => this.touchEnd(event));
-      //반응형
+      //반응형 (PC-모바일 캐러셀 전환)
       window.addEventListener("resize", () => {
          this.checkIsMobile();
       });
