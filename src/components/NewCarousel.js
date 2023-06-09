@@ -1,13 +1,13 @@
 /** newCaraousel(target, title) */
 export default class NewCarousel {
-   constructor(target, item, width, responsive, partition) {
+   constructor(target, item, width, isResponsive, partition) {
       this.target = target;
       this.itemArr = item;
       this.width = width;
-      this.responsive = responsive;
+      this.isResponsive = isResponsive;
       //화면 분할 수를 partition으로 표현
       this.partition = partition;
-      this.slidingdX = 0;
+      this.slidingX = 0;
       this.activeIndex = 0;
       this.lastIndex = this.itemArr.length - 1;
       this.carouselWrapper;
@@ -35,7 +35,7 @@ export default class NewCarousel {
       let itemWidth;
       let fixedArr;
 
-      if (this.responsive && browserWidth >= 769) {
+      if (this.isResponsive && browserWidth >= 769) {
          itemWidth = carouselContainerWidth / this.partition;
          const dotQty = Math.ceil(this.itemArr.length / this.partition);
          fixedArr = this.itemArr.slice(0, dotQty);
@@ -46,7 +46,7 @@ export default class NewCarousel {
       }
 
       return `
-      <ul style="transform: translateX(${this.slidingdX}px)" class="carousel-wrapper">
+      <ul style="transform: translateX(${this.slidingX}px)" class="carousel-wrapper">
       ${this.itemArr
          .map(
             (item, index) =>
@@ -93,11 +93,11 @@ export default class NewCarousel {
    next() {
       if (this.activeIndex < this.lastIndex) {
          this.activeIndex++;
-         this.slidingdX = -100 * this.activeIndex;
+         this.slidingX = -100 * this.activeIndex;
          this.sliding();
       } else if (this.activeIndex === this.lastIndex) {
          this.activeIndex = 0;
-         this.slidingdX = 0;
+         this.slidingX = 0;
          this.sliding();
       }
    }
@@ -105,24 +105,24 @@ export default class NewCarousel {
    prev() {
       if (this.activeIndex > 0) {
          this.activeIndex--;
-         this.slidingdX = -this.activeIndex * 100;
+         this.slidingX = -this.activeIndex * 100;
          this.sliding();
       } else if (this.activeIndex === 0) {
          this.activeIndex = this.lastIndex;
-         this.slidingdX = -this.lastIndex * 100;
+         this.slidingX = -this.activeIndex * 100;
          this.sliding();
       }
    }
 
    sliding() {
-      this.carouselWrapper.style.transform = `translateX(${this.slidingdX}%)`;
+      this.carouselWrapper.style.transform = `translateX(${this.slidingX}%)`;
       this.controlIndicator();
    }
 
    onDotClick(event) {
       const direction = event.target.dataset.index;
       this.activeIndex = parseInt(direction);
-      this.slidingdX = -direction * 100;
+      this.slidingX = -direction * 100;
       this.sliding();
    }
 
