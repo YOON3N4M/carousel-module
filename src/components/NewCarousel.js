@@ -7,7 +7,6 @@ export default class NewCarousel {
       this.isResponsive = isResponsive;
       //화면 분할 수를 partition으로 표현
       this.partition = partition;
-      this.slidingX = 0;
       this.activeIndex = 0;
       this.lastIndex = this.itemArr.length - 1;
       this.carouselWrapper;
@@ -46,7 +45,7 @@ export default class NewCarousel {
       }
 
       return `
-      <ul style="transform: translateX(${this.slidingX}px)" class="carousel-wrapper">
+      <ul style="transform: translateX(${this.activeIndex}px)" class="carousel-wrapper">
       ${this.itemArr
          .map(
             (item, index) =>
@@ -82,6 +81,7 @@ export default class NewCarousel {
       nextBtn.addEventListener("click", () => {
          this.next();
       });
+
       for (var i = 0; i < dotBtnList.length; i++) {
          dotBtnList[i].addEventListener("click", event => this.onDotClick(event));
       }
@@ -93,11 +93,9 @@ export default class NewCarousel {
    next() {
       if (this.activeIndex < this.lastIndex) {
          this.activeIndex++;
-         this.slidingX = -100 * this.activeIndex;
          this.sliding();
       } else if (this.activeIndex === this.lastIndex) {
          this.activeIndex = 0;
-         this.slidingX = 0;
          this.sliding();
       }
    }
@@ -105,24 +103,22 @@ export default class NewCarousel {
    prev() {
       if (this.activeIndex > 0) {
          this.activeIndex--;
-         this.slidingX = -this.activeIndex * 100;
          this.sliding();
       } else if (this.activeIndex === 0) {
          this.activeIndex = this.lastIndex;
-         this.slidingX = -this.activeIndex * 100;
          this.sliding();
       }
    }
 
    sliding() {
-      this.carouselWrapper.style.transform = `translateX(${this.slidingX}%)`;
+      this.carouselWrapper.style.transform = `translateX(${-100 * this.activeIndex}%)`;
       this.controlIndicator();
    }
 
    onDotClick(event) {
       const direction = event.target.dataset.index;
+
       this.activeIndex = parseInt(direction);
-      this.slidingX = -direction * 100;
       this.sliding();
    }
 
@@ -134,6 +130,7 @@ export default class NewCarousel {
       if (dotToDelete !== null) {
          dotToDelete.className = "dot";
       }
+
       dotArr[this.activeIndex].className += " active";
    }
 
