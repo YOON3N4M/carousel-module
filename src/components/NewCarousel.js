@@ -10,38 +10,46 @@ export default class NewCarousel {
       this.activeIndex = 0;
       this.lastIndex = this.itemArr.length - 1;
       this.carouselWrapper;
+      this.carouselContainer;
       this.startX;
       this.endX;
+      this.currentIsMobile;
+      this.isMobile;
+      this.target.style.maxWidth = this.width;
+      this.checkIsMobile();
+      this.carouselContainerWidth = this.target.offsetWidth;
       this.init();
    }
 
    init() {
-      this.target.style.maxWidth = this.width;
-      this.render();
       this.template();
+      this.render();
       this.controlIndicator();
    }
 
    render() {
       this.target.innerHTML = this.template();
       this.carouselWrapper = this.target.querySelector(".carousel-wrapper");
+      this.carouselContainer = this.target.querySelector(".carousel-container");
+      this.carouselWrapper.style.width = `${this.width}vw`;
+      this.target.style.width = `${this.width}vw`;
       this.addEvent();
    }
 
    template() {
-      const browserWidth = document.body.scrollWidth;
-      const carouselContainerWidth = this.target.offsetWidth;
+      // const carouselContainerWidth = this.target.offsetWidth;
       let itemWidth;
       let fixedArr;
 
-      if (this.isResponsive && browserWidth >= 769) {
-         itemWidth = carouselContainerWidth / this.partition;
+      if (this.isResponsive && this.isMobile === false) {
+         itemWidth = this.width / this.partition;
          const dotQty = Math.ceil(this.itemArr.length / this.partition);
          fixedArr = this.itemArr.slice(0, dotQty);
          this.lastIndex = fixedArr.length - 1;
       } else {
-         itemWidth = carouselContainerWidth;
+         itemWidth = this.width;
          fixedArr = this.itemArr;
+         this.lastIndex = this.itemArr.length - 1;
       }
 
       return `
@@ -53,7 +61,7 @@ export default class NewCarousel {
             <li>
               <div>
                 <span class="description">${item.description}</span>
-                <img style="width: ${itemWidth}px" class="item" src=${item.URL}/>
+                <img style="width: ${itemWidth}vw" class="item" src=${item.URL}/>
               </div>
             </li>
             `,
@@ -88,6 +96,10 @@ export default class NewCarousel {
       //스와이프 기능
       this.carouselWrapper.addEventListener("touchstart", event => this.touchStart(event));
       this.carouselWrapper.addEventListener("touchend", event => this.touchEnd(event));
+      //반응형
+      window.addEventListener("resize", () => {
+         this.checkIsMobile();
+      });
    }
 
    next() {
@@ -145,6 +157,47 @@ export default class NewCarousel {
          this.next();
       } else {
          this.prev();
+      }
+   }
+
+   checkIsMobile() {
+      const currentWidth = window.outerWidth;
+      this.carouselContainerWidth = this.target.offsetWidth;
+      console.log(this.carouselContainerWidth);
+      //초기 실행
+      if (currentWidth > 769 && this.currentIsMobile === undefined) {
+         //pc
+         this.currentIsMobile = false;
+         console.log(this.currentIsMobile, "현재 PC상태 입니다.");
+      } else if (currentWidth < 769 && this.currentIsMobile === undefined) {
+         //mobile
+         this.currentIsMobile = true;
+         console.log(this.currentIsMobile, "현재 모바일상태 입니다.");
+      }
+
+      //변경 감지
+      if (currentWidth >= 769) {
+         //pc
+         this.isMobile = false;
+      } else if (currentWidth < 769) {
+         //mobile
+         this.isMobile = true;
+      }
+
+      this.changeDevice();
+   }
+
+   changeDevice() {
+      if (this.currentIsMobile !== this.isMobile) {
+         if (this.isMobile) {
+            console.log("모바일로 변환");
+            this.currentIsMobile = true;
+            this.init();
+         } else {
+            console.log("PC로 변환");
+            this.currentIsMobile = false;
+            this.init();
+         }
       }
    }
 }
