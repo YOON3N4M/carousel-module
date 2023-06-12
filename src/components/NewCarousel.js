@@ -18,6 +18,8 @@ export default class NewCarousel {
       this.isMobile;
       this.target.style.maxWidth = this.width;
       this.currentWidth = window.outerWidth;
+      this.itemWidth;
+      this.dotQtyArr;
       this.pcSlideQty;
       if (pcSlideQty !== undefined) {
          this.pcSlideQty = pcSlideQty;
@@ -46,38 +48,16 @@ export default class NewCarousel {
    }
 
    template() {
-      let itemWidth;
+      
       //dotQtyArr는 indicator의 인덱스를 위해 선언후 사용
-      let dotQtyArr;
+      
       /* 
       여기서 this.activeIndex를 0으로 초기화 시켜주지 않으면 Mobile 버전에서 
       최대 인덱스까지 옮긴 후 PC버전으로 변경 됐을때 PC버전엔 없는 index라서 에러가 남
       때문에 Mobile, PC 간 전환이 이루어지면 this.activeIndex를 초기화
       */
       this.activeIndex = 0;
-
-      if (this.isResponsive && this.isMobile === false) {
-         //PC 버전
-         //슬라이드의 크기
-         itemWidth = this.width / this.partition;
-         //인덱스
-         const dotQty = Math.ceil(this.ImmutableItemArr.length / this.partition);
-         dotQtyArr = this.itemArr.slice(0, dotQty);
-         //if PC 버전의 슬라이드 갯수를 지정했다면
-         if (this.pcSlideQty !== undefined) {
-            this.itemArr = this.ImmutableItemArr.slice(0, this.pcSlideQty);
-         }
-         this.lastIndex = this.itemArr.length - 1;
-      } else {
-         //Mobile 버전
-         itemWidth = this.width;
-         //if Mobile 버전의 슬라이드 갯수를 지정했다면
-         if (this.mobileSlideQty !== undefined) {
-            this.itemArr = this.ImmutableItemArr.slice(0, this.mobileSlideQty);
-         }
-         dotQtyArr = this.itemArr;
-         this.lastIndex = this.itemArr.length - 1;
-      }
+      this.reconstructionTemplate()
 
       return `
       <ul style="transform: translateX(${this.activeIndex}px)" class="carousel-wrapper">
@@ -88,7 +68,7 @@ export default class NewCarousel {
             <li>
               <div>
                 <span class="description">${item.description}</span>
-                <img style="width: ${itemWidth}vw" class="item" src=${item.URL}/>
+                <img style="width: ${this.itemWidth}vw" class="item" src=${item.URL}/>
               </div>
             </li>
             `,
@@ -98,11 +78,43 @@ export default class NewCarousel {
       <div class="navigation">
         <button data-direction="prev" class="prev arrow"><</button>
         <ul class="dot-indicator">
-          ${dotQtyArr.map((n, i) => `<button data-index=${i} class="dot"></button>`).join("")}
+          ${this.dotQtyArr.map((n, i) => `<button data-index=${i} class="dot"></button>`).join("")}
         </ul>
         <button data-direction="next" class="next arrow">></button>
       </div>
       `;
+   }
+
+   
+   reconstructionTemplate(){
+      if (this.isResponsive && this.isMobile === false) {
+         //PC 버전
+         //슬라이드의 크기
+         this.itemWidth = this.width / this.partition;
+         //인덱스
+         const dotQty = Math.ceil(this.ImmutableItemArr.length / this.partition);
+         this.dotQtyArr = this.itemArr.slice(0, dotQty);
+         //if PC 버전의 슬라이드 갯수를 지정했다면
+         if (this.pcSlideQty !== undefined) {
+            this.itemArr = this.ImmutableItemArr.slice(0, this.pcSlideQty);
+         }
+         //파티션의 갯수가 2이상일때 lastIndex 설정
+         if (this.partition > 1) {
+            this.lastIndex =this.dotQtyArr.length -1
+         } 
+         else {this.lastIndex = this.itemArr.length - 1;}
+    
+      } 
+      else {
+         //Mobile 버전
+         this.itemWidth = this.width;
+         //if Mobile 버전의 슬라이드 갯수를 지정했다면
+         if (this.mobileSlideQty !== undefined) {
+            this.itemArr = this.ImmutableItemArr.slice(0, this.mobileSlideQty);
+         }
+         this.dotQtyArr = this.itemArr;
+         this.lastIndex = this.itemArr.length - 1;
+      }
    }
 
    addEvent() {
