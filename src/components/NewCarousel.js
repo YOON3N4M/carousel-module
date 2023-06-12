@@ -85,7 +85,7 @@ export default class NewCarousel {
       `;
    }
 
-   
+   //브라우저 리사이징으로 기기 전환이 감지 되면 그에 맞는 템플릿으로 재구성
    reconstructionTemplate(){
       if (this.isResponsive && this.isMobile === false) {
          //PC 버전
@@ -98,7 +98,7 @@ export default class NewCarousel {
          if (this.pcSlideQty !== undefined) {
             this.itemArr = this.ImmutableItemArr.slice(0, this.pcSlideQty);
          }
-         //파티션의 갯수가 2이상일때 lastIndex 설정
+         //파티션의 갯수가 2이상일때 계산된 숫자(dotQty)로 lastIndex 설정
          if (this.partition > 1) {
             this.lastIndex =this.dotQtyArr.length -1
          } 
