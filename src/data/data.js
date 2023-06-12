@@ -54,11 +54,11 @@ export const third = [
       description: "드라이브 모드 / 험로 주행모드",
    },
    {
-      URL: "https://www.hyundai.com/static/images/model/palisade/24my/palisade_performance_drive_multi_terrain_mode.jpg",
-      description: "드라이브 모드 / 험로 주행모드",
+      URL: "https://www.hyundai.com/static/images/model/sonata/23fl/sonata_the_edge_performance_driving_performance.jpg",
+      description: "red",
    },
    {
       URL: "https://www.hyundai.com/static/images/model/palisade/24my/palisade_performance_drive_multi_terrain_mode.jpg",
-      description: "드라이브 모드 / 험로 주행모드",
+      description: "example",
    },
 ];
