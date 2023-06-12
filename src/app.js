@@ -7,8 +7,8 @@ class App {
       const palisadeCarousel = document.querySelector(".palisade");
       const thirdCarousel = document.querySelector(".third");
       /*NEwCarousel(타겟, 데이터, html의width값, 반응형 분할 여부, 파티션 갯수,pc 슬라이드 갯수(optional),모바일 슬라이드 갯수(optional))*/
-      new NewCarousel(hyundaiCarousel, hyundai, hyundaiCarousel.dataset.width, true, 2);
-      new NewCarousel(palisadeCarousel, palisade, palisadeCarousel.dataset.width, false, 1);
+      // new NewCarousel(hyundaiCarousel, hyundai, hyundaiCarousel.dataset.width, true, 2);
+      //new NewCarousel(palisadeCarousel, palisade, palisadeCarousel.dataset.width, false, 1);
       new NewCarousel(thirdCarousel, third, thirdCarousel.dataset.width, true, 1, 5, 3);
    }
 }

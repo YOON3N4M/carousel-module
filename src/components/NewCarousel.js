@@ -62,18 +62,18 @@ export default class NewCarousel {
          itemWidth = this.width / this.partition;
          //인덱스
          const dotQty = Math.ceil(this.ImmutableItemArr.length / this.partition);
-         fixedArr = this.ImmutableItemArr.slice(0, dotQty);
+         fixedArr = this.itemArr.slice(0, dotQty);
+
          //if PC 버전의 슬라이드 갯수를 지정했다면
          if (this.pcSlideQty !== undefined) {
             this.itemArr = this.ImmutableItemArr.slice(0, this.pcSlideQty);
          }
-         this.lastIndex = fixedArr.length - 1;
+         this.lastIndex = this.itemArr.length - 1;
       } else {
          //Mobile 버전
          itemWidth = this.width;
          //if Mobile 버전의 슬라이드 갯수를 지정했다면
          if (this.mobileSlideQty !== undefined) {
-            console.log(this.mobileSlideQty);
             this.itemArr = this.ImmutableItemArr.slice(0, this.mobileSlideQty);
          }
          fixedArr = this.itemArr;
@@ -166,7 +166,6 @@ export default class NewCarousel {
       const dotToDelete = this.target.querySelector(".active");
 
       if (dotToDelete !== null) {
-         console.log(dotToDelete.classList);
          dotToDelete.classList.remove("active");
       }
 
