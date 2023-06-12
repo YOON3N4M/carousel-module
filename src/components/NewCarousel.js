@@ -2,6 +2,7 @@
 export default class NewCarousel {
    constructor(target, item, width, isResponsive, partition, pcSlideQty, mobileSlideQty) {
       this.target = target;
+      this.ImmutableItemArr = item;
       this.itemArr = item;
       this.width = width;
       this.isResponsive = isResponsive;
@@ -46,33 +47,36 @@ export default class NewCarousel {
 
    template() {
       let itemWidth;
+      //fixedArr는 indicator의 인덱스를 위해 선언후 사용
       let fixedArr;
       /* 
-      여기서 this.activeIndex를 0으로 초기화 시켜주지 않으면 모바일 버전에서 
+      여기서 this.activeIndex를 0으로 초기화 시켜주지 않으면 Mobile 버전에서 
       최대 인덱스까지 옮긴 후 PC버전으로 변경 됐을때 PC버전엔 없는 index라서 에러가 남
-      때문에 모바일, PC 간 전환이 이루어지면 this.activeIndex를 초기화
+      때문에 Mobile, PC 간 전환이 이루어지면 this.activeIndex를 초기화
       */
       this.activeIndex = 0;
 
       if (this.isResponsive && this.isMobile === false) {
+         //PC 버전
+         //슬라이드의 크기
          itemWidth = this.width / this.partition;
-         const dotQty = Math.ceil(this.itemArr.length / this.partition);
-         fixedArr = this.itemArr.slice(0, dotQty);
-
+         //인덱스
+         const dotQty = Math.ceil(this.ImmutableItemArr.length / this.partition);
+         fixedArr = this.ImmutableItemArr.slice(0, dotQty);
+         //if PC 버전의 슬라이드 갯수를 지정했다면
          if (this.pcSlideQty !== undefined) {
-            this.itemArr = this.itemArr.slice(0, this.pcSlideQty);
-
-            console.log(this.itemArr);
+            this.itemArr = this.ImmutableItemArr.slice(0, this.pcSlideQty);
          }
          this.lastIndex = fixedArr.length - 1;
       } else {
+         //Mobile 버전
          itemWidth = this.width;
-         fixedArr = this.itemArr;
-         if (this.pcSlideQty !== undefined) {
-            this.itemArr = this.itemArr.slice(0, this.mobileSlideQty);
-            console.log(this.itemArr);
+         //if Mobile 버전의 슬라이드 갯수를 지정했다면
+         if (this.mobileSlideQty !== undefined) {
+            console.log(this.mobileSlideQty);
+            this.itemArr = this.ImmutableItemArr.slice(0, this.mobileSlideQty);
          }
-
+         fixedArr = this.itemArr;
          this.lastIndex = this.itemArr.length - 1;
       }
 
@@ -120,7 +124,7 @@ export default class NewCarousel {
       //스와이프 기능
       this.carouselWrapper.addEventListener("touchstart", event => this.touchStart(event));
       this.carouselWrapper.addEventListener("touchend", event => this.touchEnd(event));
-      //반응형 (PC-모바일 캐러셀 전환)
+      //반응형 (PC-mobile 캐러셀 전환)
       window.addEventListener("resize", () => this.onResizing());
    }
 
@@ -162,10 +166,11 @@ export default class NewCarousel {
       const dotToDelete = this.target.querySelector(".active");
 
       if (dotToDelete !== null) {
-         dotToDelete.className = "dot";
+         console.log(dotToDelete.classList);
+         dotToDelete.classList.remove("active");
       }
 
-      dotArr[this.activeIndex].className += " active";
+      dotArr[this.activeIndex].classList.add("active");
    }
 
    touchStart(event) {
@@ -196,13 +201,13 @@ export default class NewCarousel {
          //mobile
          this.currentIsMobile = true;
          this.isMobile = true;
-         console.log(this.currentIsMobile, "현재 모바일상태 입니다.");
+         console.log(this.currentIsMobile, "현재 Mobile상태 입니다.");
       }
    }
 
    onResizing() {
       this.currentWidth = window.outerWidth;
-      //리사이증 변경 감지
+      //리사이징 변경 감지
       if (this.currentWidth >= 769) {
          //pc
          this.isMobile = false;
@@ -216,7 +221,7 @@ export default class NewCarousel {
    changeDevice() {
       if (this.currentIsMobile !== this.isMobile) {
          if (this.isMobile) {
-            console.log("모바일로 변환");
+            console.log("Mobile로 변환");
             this.currentIsMobile = true;
             this.init();
          } else {
