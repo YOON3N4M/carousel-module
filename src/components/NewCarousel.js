@@ -47,8 +47,8 @@ export default class NewCarousel {
 
    template() {
       let itemWidth;
-      //fixedArr는 indicator의 인덱스를 위해 선언후 사용
-      let fixedArr;
+      //dotQtyArr는 indicator의 인덱스를 위해 선언후 사용
+      let dotQtyArr;
       /* 
       여기서 this.activeIndex를 0으로 초기화 시켜주지 않으면 Mobile 버전에서 
       최대 인덱스까지 옮긴 후 PC버전으로 변경 됐을때 PC버전엔 없는 index라서 에러가 남
@@ -62,7 +62,7 @@ export default class NewCarousel {
          itemWidth = this.width / this.partition;
          //인덱스
          const dotQty = Math.ceil(this.ImmutableItemArr.length / this.partition);
-         fixedArr = this.itemArr.slice(0, dotQty);
+         dotQtyArr = this.itemArr.slice(0, dotQty);
 
          //if PC 버전의 슬라이드 갯수를 지정했다면
          if (this.pcSlideQty !== undefined) {
@@ -76,7 +76,7 @@ export default class NewCarousel {
          if (this.mobileSlideQty !== undefined) {
             this.itemArr = this.ImmutableItemArr.slice(0, this.mobileSlideQty);
          }
-         fixedArr = this.itemArr;
+         dotQtyArr = this.itemArr;
          this.lastIndex = this.itemArr.length - 1;
       }
 
@@ -99,7 +99,7 @@ export default class NewCarousel {
       <div class="navigation">
         <button data-direction="prev" class="prev arrow"><</button>
         <ul class="dot-indicator">
-          ${fixedArr.map((n, i) => `<button data-index=${i} class="dot"></button>`).join("")}
+          ${dotQtyArr.map((n, i) => `<button data-index=${i} class="dot"></button>`).join("")}
         </ul>
         <button data-direction="next" class="next arrow">></button>
       </div>
@@ -111,12 +111,8 @@ export default class NewCarousel {
       const nextBtn = this.target.querySelector(".next");
       const dotBtnList = this.target.querySelectorAll(".dot");
 
-      prevBtn.addEventListener("click", () => {
-         this.prev();
-      });
-      nextBtn.addEventListener("click", () => {
-         this.next();
-      });
+      prevBtn.addEventListener("click", () => {this.prev()});
+      nextBtn.addEventListener("click", () => {this.next()});
 
       for (var i = 0; i < dotBtnList.length; i++) {
          dotBtnList[i].addEventListener("click", event => this.onDotClick(event));
