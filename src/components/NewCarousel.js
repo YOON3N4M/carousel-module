@@ -1,13 +1,15 @@
-/** newCaraousel(target, title) */
 export default class NewCarousel {
-   constructor(target, item, width, isResponsive, partition, pcSlideQty, mobileSlideQty) {
+   constructor(target, option) {
       this.target = target;
-      this.ImmutableItemArr = item;
-      this.itemArr = item;
-      this.width = width;
-      this.isResponsive = isResponsive;
+      this.immutableItemArr = option.data;
+      this.itemArr = option.data;
+      this.width = parseInt(option.width);
+      this.isResponsive = option.isResponsive;
       //화면 분할 수를 partition으로 표현
-      this.partition = partition;
+      this.pcPartition = option.pcPartition;
+      this.mobilePartition = option.mobilePartition;
+      this.qtyToSlidePc = option.qtyToSlidePc;
+      this.qtyToSlideMobile = option.qtyToSlideMobile;
       this.activeIndex = 0;
       this.lastIndex = this.itemArr.length - 1;
       this.carouselWrapper;
@@ -20,14 +22,7 @@ export default class NewCarousel {
       this.currentWidth = window.outerWidth;
       this.itemWidth;
       this.dotQtyArr;
-      this.pcSlideQty;
-      if (pcSlideQty !== undefined) {
-         this.pcSlideQty = pcSlideQty;
-      }
-      this.mobileSlideQty;
-      if (mobileSlideQty !== undefined) {
-         this.mobileSlideQty = mobileSlideQty;
-      }
+
       this.isMobileInit();
       this.init();
    }
@@ -48,16 +43,27 @@ export default class NewCarousel {
    }
 
    template() {
-      
       //dotQtyArr는 indicator의 인덱스를 위해 선언후 사용
-      
+
       /* 
       여기서 this.activeIndex를 0으로 초기화 시켜주지 않으면 Mobile 버전에서 
       최대 인덱스까지 옮긴 후 PC버전으로 변경 됐을때 PC버전엔 없는 index라서 에러가 남
       때문에 Mobile, PC 간 전환이 이루어지면 this.activeIndex를 초기화
       */
       this.activeIndex = 0;
-      this.reconstructionTemplate()
+
+      if (this.isMobile) {
+         this.itemWidth = this.width / this.mobilePartition;
+         this.lastIndex = this.immutableItemArr.length / (this.mobilePartition * this.qtyToSlideMobile);
+      } else {
+         this.itemWidth = this.width / this.pcPartition;
+         this.lastIndex = this.immutableItemArr.length - this.pcPartition * this.qtyToSlidePc;
+         console.log(this.immutableItemArr.length, this.pcPartition, this.qtyToSlidePc, this.lastIndex);
+      }
+      //dot 갯수
+      this.dotQtyArr = this.immutableItemArr.slice(0, this.lastIndex + 1);
+
+      //this.reconstructionTemplate();
 
       return `
       <ul style="transform: translateX(${this.activeIndex}px)" class="carousel-wrapper">
@@ -85,45 +91,17 @@ export default class NewCarousel {
       `;
    }
 
-   //브라우저 리사이징으로 기기 전환이 감지 되면 그에 맞는 템플릿으로 재구성
-   reconstructionTemplate(){
-      if (this.isResponsive && this.isMobile === false) {
-         //PC 버전
-         //슬라이드의 크기
-         this.itemWidth = this.width / this.partition;
-         //인덱스
-         const dotQty = Math.ceil(this.ImmutableItemArr.length / this.partition);
-         this.dotQtyArr = this.itemArr.slice(0, dotQty);
-         //if PC 버전의 슬라이드 갯수를 지정했다면
-         if (this.pcSlideQty !== undefined) {
-            this.itemArr = this.ImmutableItemArr.slice(0, this.pcSlideQty);
-         }
-         //파티션의 갯수가 2이상일때 계산된 숫자(dotQty)로 lastIndex 설정
-         if (this.partition > 1) {
-            this.lastIndex =this.dotQtyArr.length -1
-         } 
-         else {this.lastIndex = this.itemArr.length - 1;}
-    
-      } 
-      else {
-         //Mobile 버전
-         this.itemWidth = this.width;
-         //if Mobile 버전의 슬라이드 갯수를 지정했다면
-         if (this.mobileSlideQty !== undefined) {
-            this.itemArr = this.ImmutableItemArr.slice(0, this.mobileSlideQty);
-         }
-         this.dotQtyArr = this.itemArr;
-         this.lastIndex = this.itemArr.length - 1;
-      }
-   }
-
    addEvent() {
       const prevBtn = this.target.querySelector(".prev");
       const nextBtn = this.target.querySelector(".next");
       const dotBtnList = this.target.querySelectorAll(".dot");
 
-      prevBtn.addEventListener("click", () => {this.prev()});
-      nextBtn.addEventListener("click", () => {this.next()});
+      prevBtn.addEventListener("click", () => {
+         this.prev();
+      });
+      nextBtn.addEventListener("click", () => {
+         this.next();
+      });
 
       for (var i = 0; i < dotBtnList.length; i++) {
          dotBtnList[i].addEventListener("click", event => this.onDotClick(event));
@@ -156,7 +134,14 @@ export default class NewCarousel {
    }
 
    sliding() {
-      this.carouselWrapper.style.transform = `translateX(${-100 * this.activeIndex}%)`;
+      let slidingX;
+      //이부분 qtyToSlide 수정한 거 적용 해야함
+      if (this.isMobile) {
+         slidingX = (100 / this.mobilePartition) * this.qtyToSlideMobile;
+      } else {
+         slidingX = (100 / this.pcPartition) * this.qtyToSlidePc;
+      }
+      this.carouselWrapper.style.transform = `translateX(${-slidingX * this.activeIndex}%)`;
       this.controlIndicator();
    }
 
@@ -231,6 +216,36 @@ export default class NewCarousel {
             this.currentIsMobile = false;
             this.init();
          }
+      }
+   }
+   //브라우저 리사이징으로 기기 전환이 감지 되면 그에 맞는 템플릿으로 재구성
+   reconstructionTemplate() {
+      if (this.isResponsive && this.isMobile === false) {
+         //PC 버전
+         //슬라이드의 크기
+         this.itemWidth = this.width / this.partition;
+         //인덱스
+         const dotQty = Math.ceil(this.immutableItemArr.length / this.partition);
+         this.dotQtyArr = this.itemArr.slice(0, dotQty);
+         //if PC 버전의 슬라이드 갯수를 지정했다면
+         if (this.pcSlideQty !== undefined) {
+            this.itemArr = this.immutableItemArr.slice(0, this.pcSlideQty);
+         }
+         //파티션의 갯수가 2이상일때 계산된 숫자(dotQty)로 lastIndex 설정
+         if (this.partition > 1) {
+            this.lastIndex = this.dotQtyArr.length - 1;
+         } else {
+            this.lastIndex = this.itemArr.length - 1;
+         }
+      } else {
+         //Mobile 버전
+         this.itemWidth = this.width;
+         //if Mobile 버전의 슬라이드 갯수를 지정했다면
+         if (this.mobileSlideQty !== undefined) {
+            this.itemArr = this.immutableItemArr.slice(0, this.mobileSlideQty);
+         }
+         this.dotQtyArr = this.itemArr;
+         this.lastIndex = this.itemArr.length - 1;
       }
    }
 }
