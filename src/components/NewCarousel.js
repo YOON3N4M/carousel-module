@@ -22,7 +22,7 @@ export default class NewCarousel {
       this.currentWidth = window.outerWidth;
       this.itemWidth;
       this.dotQtyArr;
-
+      this.isImperfection;
       this.isMobileInit();
       this.init();
    }
@@ -54,15 +54,30 @@ export default class NewCarousel {
 
       if (this.isMobile) {
          this.itemWidth = this.width / this.mobilePartition;
-         this.lastIndex = this.immutableItemArr.length / (this.mobilePartition * this.qtyToSlideMobile);
+         if (this.qtyToSlideMobile > 1) {
+            const a = this.immutableItemArr.length - (this.mobilePartition - this.qtyToSlideMobile);
+            const b = a / this.qtyToSlideMobile;
+            const index = Math.ceil(b) - 1;
+
+            this.lastIndex = index;
+         } else {
+            this.lastIndex = this.immutableItemArr.length - this.mobilePartition * this.qtyToSlideMobile;
+         }
       } else {
          this.itemWidth = this.width / this.pcPartition;
-         this.lastIndex = this.immutableItemArr.length - this.pcPartition * this.qtyToSlidePc;
-         console.log(this.immutableItemArr.length, this.pcPartition, this.qtyToSlidePc, this.lastIndex);
+         if (this.qtyToSlidePc > 1) {
+            const a = this.immutableItemArr.length - (this.pcPartition - this.qtyToSlidePc);
+            const b = a / this.qtyToSlidePc;
+            const index = Math.ceil(b) - 1;
+
+            this.lastIndex = index;
+         } else {
+            this.lastIndex = this.immutableItemArr.length - this.pcPartition * this.qtyToSlidePc;
+         }
       }
       //dot 갯수
       this.dotQtyArr = this.immutableItemArr.slice(0, this.lastIndex + 1);
-
+      console.log(this.dotQtyArr);
       //this.reconstructionTemplate();
 
       return `
@@ -138,6 +153,17 @@ export default class NewCarousel {
       //이부분 qtyToSlide 수정한 거 적용 해야함
       if (this.isMobile) {
          slidingX = (100 / this.mobilePartition) * this.qtyToSlideMobile;
+         //아마 여백을 줄이는 로직은 아래와 같을듯. 임시작성
+         if (this.qtyToSlideMobile > 1) {
+            const a = this.immutableItemArr.length % this.mobilePartition;
+            const b = a - (this.mobilePartition - this.qtyToSlideMobile);
+            const c = b / this.mobilePartition;
+            if (this.activeIndex === 6) {
+               console.log(c);
+               // slidingX = 66;
+            }
+            console.log(slidingX);
+         }
       } else {
          slidingX = (100 / this.pcPartition) * this.qtyToSlidePc;
       }

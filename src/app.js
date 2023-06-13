@@ -36,24 +36,24 @@ class App {
          isResponsive: true,
          pcPartition: 5,
          qtyToSlidePc: 1,
-         mobilePartition: 3,
-         qtyToSlideMobile: 1,
+         mobilePartition: 4,
+         qtyToSlideMobile: 2,
       };
 
       const testOption = {
          data: last,
          width: testCarousel.dataset.width,
          isResponsive: true,
-         pcPartition: 4,
+         pcPartition: 3,
          qtyToSlidePc: 2,
-         mobilePartition: 2,
-         qtyToSlideMobile: 2,
+         mobilePartition: 4,
+         qtyToSlideMobile: 3,
       };
       /*NEwCarousel(타겟, 데이터, html의width값, 반응형 분할 여부, 파티션 갯수,pc 슬라이드 갯수(optional),모바일 슬라이드 갯수(optional))*/
       // new NewCarousel(hyundaiCarousel, hyundaiOption);
       //new NewCarousel(palisadeCarousel, palisade, palisadeCarousel.dataset.width, false, 1);
 
-      new NewCarousel(lastCarousel, lastOption);
+      // new NewCarousel(lastCarousel, lastOption);
       new NewCarousel(testCarousel, testOption);
    }
 }
