@@ -101,6 +101,10 @@ export const last = [
       description: "드라이브 모드 / 험로 주행모드",
    },
    {
+      URL: "https://www.hyundai.com/static/images/model/sonata/23fl/mo/sonata_the_edge_highlights_n_line_m.jpg",
+      description: "N Line",
+   },
+   {
       URL: "https://www.hyundai.com/static/images/model/sonata/23fl/mo/sonata_the_edge_highlights_design_m.jpg",
       description: "Design",
    },
@@ -115,9 +119,5 @@ export const last = [
    {
       URL: "https://www.hyundai.com/static/images/model/sonata/23fl/mo/sonata_the_edge_highlights_sonata_the_edge_m.jpg",
       description: "SONATA The Edge",
-   },
-   {
-      URL: "https://www.hyundai.com/static/images/model/sonata/23fl/mo/sonata_the_edge_highlights_n_line_m.jpg",
-      description: "N Line",
    },
 ];
