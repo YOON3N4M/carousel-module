@@ -99,6 +99,7 @@ export default class NewCarousel {
          )
          .join("")}
       </ul>
+     
       <div class="navigation">
         <button data-direction="prev" class="prev arrow"><</button>
         <ul class="dot-indicator">
@@ -149,7 +150,7 @@ export default class NewCarousel {
 
    sliding() {
       let slidingX;
-
+      this.calculateIsEmpty();
       //이부분 qtyToSlide 수정한 거 적용 해야함
       if (this.isMobile) {
          slidingX = (100 / this.mobilePartition) * this.qtyToSlideMobile;
@@ -158,9 +159,6 @@ export default class NewCarousel {
             const a = this.immutableItemArr.length % this.mobilePartition;
             const b = a - (this.mobilePartition - this.qtyToSlideMobile);
             const c = b / this.mobilePartition;
-            console.log();
-
-            console.log(slidingX);
          }
       } else {
          slidingX = (100 / this.pcPartition) * this.qtyToSlidePc;
@@ -168,6 +166,22 @@ export default class NewCarousel {
 
       this.carouselWrapper.style.transform = `translateX(${-slidingX * this.activeIndex}%)`;
       this.controlIndicator();
+   }
+
+   calculateIsEmpty() {
+      let totalSlides;
+      let imagesInLastSlide;
+      let emptyImages;
+      if (this.isMobile) {
+         //
+      } else {
+         let n;
+         const x = this.immutableItemArr.length;
+         const y = this.pcPartition;
+         const z = this.qtyToSlidePc;
+         //마지막 인덱스에서 비는 이미지의 개수 = n, 0이면 비지 않는 완전한 이미지
+         n = y - ((x % z) % z);
+      }
    }
 
    onDotClick(event) {
