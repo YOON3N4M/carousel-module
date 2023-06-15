@@ -1,6 +1,7 @@
 export default class NewCarousel {
    constructor(target, option) {
       this.target = target;
+      this.option = option;
       this.immutableItemArr = option.data;
       this.itemArr = option.data;
       this.width = parseInt(option.width);
@@ -10,6 +11,7 @@ export default class NewCarousel {
       this.mobilePartition = option.mobilePartition;
       this.qtyToSlidePc = option.qtyToSlidePc;
       this.qtyToSlideMobile = option.qtyToSlideMobile;
+      this.slideCount;
       this.activeIndex = 0;
       this.lastIndex = this.itemArr.length - 1;
       this.carouselWrapper;
@@ -54,28 +56,28 @@ export default class NewCarousel {
 
       if (this.isMobile) {
          this.itemWidth = this.width / this.mobilePartition;
-         if (this.qtyToSlideMobile > 1) {
+         if (this.slideCount > 1) {
             // 전체 사진 개수 - (보여지는 이미지 개수 - 한번에 이동할 이미지 개수) = 이동에 실제 필요한 사진 개수...(?)
-            const a = this.immutableItemArr.length - (this.mobilePartition - this.qtyToSlideMobile);
+            const a = this.immutableItemArr.length - (this.mobilePartition - this.slideCount);
             // 이동에 필요한 이미지 개수 / 한번에 이동할 이미지 개수
-            const b = a / this.qtyToSlideMobile;
+            const b = a / this.slideCount;
             // 소수점을 일단 반 올림 한 뒤 -1
             const index = Math.ceil(b) - 1;
 
             this.lastIndex = index;
          } else {
-            this.lastIndex = this.immutableItemArr.length - this.mobilePartition * this.qtyToSlideMobile;
+            this.lastIndex = this.immutableItemArr.length - this.mobilePartition * this.slideCount;
          }
       } else {
          this.itemWidth = this.width / this.pcPartition;
-         if (this.qtyToSlidePc > 1) {
-            const a = this.immutableItemArr.length - (this.pcPartition - this.qtyToSlidePc);
-            const b = a / this.qtyToSlidePc;
+         if (this.slideCount > 1) {
+            const a = this.immutableItemArr.length - (this.pcPartition - this.slideCount);
+            const b = a / this.slideCount;
             const index = Math.ceil(b) - 1;
 
             this.lastIndex = index;
          } else {
-            this.lastIndex = this.immutableItemArr.length - this.pcPartition * this.qtyToSlidePc;
+            this.lastIndex = this.immutableItemArr.length - this.pcPartition * this.slideCount;
          }
       }
       //dot 갯수
@@ -154,17 +156,17 @@ export default class NewCarousel {
       const emptyImages = this.calculateIsEmpty();
 
       if (this.isMobile) {
-         slidingX = (100 / this.mobilePartition) * this.qtyToSlideMobile;
+         slidingX = (100 / this.mobilePartition) * this.slideCount;
          //아마 여백을 줄이는 로직은 아래와 같을듯. 임시작성
-         if (this.qtyToSlideMobile > 1) {
+         if (this.slideCount > 1) {
          }
       } else {
-         slidingX = (100 / this.pcPartition) * this.qtyToSlidePc;
-         if (this.qtyToSlidePc > 1 && emptyImages > 0) {
+         slidingX = (100 / this.pcPartition) * this.slideCount;
+         if (this.slideCount > 1 && emptyImages > 0) {
             if (this.activeIndex === this.lastIndex) {
                const a = slidingX;
                const b = slidingX * (this.activeIndex - 1); //마지막 인덱스 전 -x 값
-               const c = b + a * (emptyImages / this.qtyToSlidePc);
+               const c = b + a * (emptyImages / this.slideCount);
                console.log(emptyImages);
                slidingX = c / this.lastIndex;
             }
@@ -185,7 +187,7 @@ export default class NewCarousel {
          let n;
          const x = this.immutableItemArr.length;
          const y = this.pcPartition;
-         const z = this.qtyToSlidePc;
+         const z = this.slideCount;
          //마지막 인덱스에서 비는 이미지의 개수 = n, 0이면 비지 않는 완전한 이미지
          n = (y - (x % z)) % z;
          console.log(n);
@@ -208,7 +210,7 @@ export default class NewCarousel {
       if (dotToDelete !== null) {
          dotToDelete.classList.remove("active");
       }
-
+      console.log(dotArr);
       dotArr[this.activeIndex].classList.add("active");
    }
 
@@ -235,10 +237,12 @@ export default class NewCarousel {
          //pc
          this.currentIsMobile = false;
          this.isMobile = false;
+         this.slideCount = this.option.qtyToSlidePc;
       } else if (this.currentWidth < 769 && this.currentIsMobile === undefined) {
          //mobile
          this.currentIsMobile = true;
          this.isMobile = true;
+         this.slideCount = this.option.qtyToSlideMobile;
       }
    }
 
@@ -259,9 +263,11 @@ export default class NewCarousel {
       if (this.currentIsMobile !== this.isMobile) {
          if (this.isMobile) {
             this.currentIsMobile = true;
+            this.slideCount = this.option.qtyToSlideMobile;
             this.init();
          } else {
             this.currentIsMobile = false;
+            this.slideCount = this.option.qtyToSlidePc;
             this.init();
          }
       }
