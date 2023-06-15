@@ -21,7 +21,6 @@ export default class NewCarousel {
       this.currentWidth = window.outerWidth;
       this.itemWidth;
       this.dotQtyArr;
-      this.isImperfection;
       this.isMobileInit();
       this.init();
    }
@@ -148,7 +147,7 @@ export default class NewCarousel {
             const a = slidingX;
             const b = slidingX * (this.activeIndex - 1); //마지막 인덱스 전 -x 값
             const c = b + a * (emptyImages / this.slideCount);
-            console.log(emptyImages);
+
             slidingX = c / this.lastIndex;
          }
       }
@@ -181,7 +180,6 @@ export default class NewCarousel {
       if (dotToDelete !== null) {
          dotToDelete.classList.remove("active");
       }
-      console.log(dotArr);
       dotArr[this.activeIndex].classList.add("active");
    }
 
