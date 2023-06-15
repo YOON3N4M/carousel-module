@@ -50,37 +50,25 @@ export default class NewCarousel {
       때문에 Mobile, PC 간 전환이 이루어지면 this.activeIndex를 초기화
       */
       this.activeIndex = 0;
+      this.itemWidth = this.width / this.partition;
 
-      if (this.isMobile) {
-         this.itemWidth = this.width / this.partition;
-         if (this.slideCount > 1) {
-            // 전체 사진 개수 - (보여지는 이미지 개수 - 한번에 이동할 이미지 개수) = 이동에 실제 필요한 사진 개수...(?)
-            const a = this.immutableItemArr.length - (this.partition - this.slideCount);
-            // 이동에 필요한 이미지 개수 / 한번에 이동할 이미지 개수
-            const b = a / this.slideCount;
-            // 소수점을 일단 반 올림 한 뒤 -1
-            const index = Math.ceil(b) - 1;
-
-            this.lastIndex = index;
-         } else {
-            this.lastIndex = this.immutableItemArr.length - this.partition * this.slideCount;
-         }
+      if (this.slideCount > 1) {
+         // 전체 사진 개수 - (보여지는 이미지 개수 - 한번에 이동할 이미지 개수) = 이동에 실제 필요한 사진 개수...(?)
+         const a = this.immutableItemArr.length - (this.partition - this.slideCount);
+         // 이동에 필요한 이미지 개수 / 한번에 이동할 이미지 개수
+         const b = a / this.slideCount;
+         // 소수점을 일단 반 올림 한 뒤 -1
+         const index = Math.ceil(b) - 1;
+         this.lastIndex = index;
       } else {
-         this.itemWidth = this.width / this.partition;
-         if (this.slideCount > 1) {
-            const a = this.immutableItemArr.length - (this.partition - this.slideCount);
-            const b = a / this.slideCount;
-            const index = Math.ceil(b) - 1;
-
-            this.lastIndex = index;
-         } else {
-            this.lastIndex = this.immutableItemArr.length - this.partition * this.slideCount;
-         }
+         this.lastIndex = this.immutableItemArr.length - this.partition * this.slideCount;
       }
+
       //dot 갯수
       this.dotQtyArr = this.immutableItemArr.slice(0, this.lastIndex + 1);
       console.log(this.dotQtyArr);
-      //this.reconstructionTemplate();
+      /*현재 사용하지 않는 메소드 주석처리
+      this.reconstructionTemplate();*/
 
       return `
       <ul style="transform: translateX(${this.activeIndex}px)" class="carousel-wrapper">
@@ -152,21 +140,16 @@ export default class NewCarousel {
       this.calculateIsEmpty();
       const emptyImages = this.calculateIsEmpty();
 
-      if (this.isMobile) {
-         slidingX = (100 / this.partition) * this.slideCount;
-         //아마 여백을 줄이는 로직은 아래와 같을듯. 임시작성
-         if (this.slideCount > 1) {
-         }
-      } else {
-         slidingX = (100 / this.partition) * this.slideCount;
-         if (this.slideCount > 1 && emptyImages > 0) {
-            if (this.activeIndex === this.lastIndex) {
-               const a = slidingX;
-               const b = slidingX * (this.activeIndex - 1); //마지막 인덱스 전 -x 값
-               const c = b + a * (emptyImages / this.slideCount);
-               console.log(emptyImages);
-               slidingX = c / this.lastIndex;
-            }
+      slidingX = (100 / this.partition) * this.slideCount;
+      //아마 여백을 줄이는 로직은 아래와 같을듯. 임시작성
+
+      if (this.slideCount > 1 && emptyImages > 0) {
+         if (this.activeIndex === this.lastIndex) {
+            const a = slidingX;
+            const b = slidingX * (this.activeIndex - 1); //마지막 인덱스 전 -x 값
+            const c = b + a * (emptyImages / this.slideCount);
+            console.log(emptyImages);
+            slidingX = c / this.lastIndex;
          }
       }
 
@@ -175,21 +158,14 @@ export default class NewCarousel {
    }
 
    calculateIsEmpty() {
-      let totalSlides;
-      let imagesInLastSlide;
-      let emptyImages;
-      if (this.isMobile) {
-         //
-      } else {
-         let n;
-         const x = this.immutableItemArr.length;
-         const y = this.partition;
-         const z = this.slideCount;
-         //마지막 인덱스에서 비는 이미지의 개수 = n, 0이면 비지 않는 완전한 이미지
-         n = (y - (x % z)) % z;
-         console.log(n);
-         return n;
-      }
+      let n;
+      const x = this.immutableItemArr.length;
+      const y = this.partition;
+      const z = this.slideCount;
+      //마지막 인덱스에서 비는 이미지의 개수 = n, 0이면 비지 않는 완전한 이미지
+      n = (y - (x % z)) % z;
+      console.log(n);
+      return n;
    }
 
    onDotClick(event) {

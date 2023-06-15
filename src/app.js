@@ -45,9 +45,9 @@ class App {
          width: testCarousel.dataset.width,
          isResponsive: true,
          pcPartition: 3,
-         qtyToSlidePc: 1,
+         qtyToSlidePc: 2,
          mobilePartition: 5,
-         qtyToSlideMobile: 1,
+         qtyToSlideMobile: 2,
       };
       /*NEwCarousel(타겟, 데이터, html의width값, 반응형 분할 여부, 파티션 갯수,pc 슬라이드 갯수(optional),모바일 슬라이드 갯수(optional))*/
       // new NewCarousel(hyundaiCarousel, hyundaiOption);
