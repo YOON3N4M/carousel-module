@@ -7,10 +7,7 @@ export default class NewCarousel {
       this.width = parseInt(option.width);
       this.isResponsive = option.isResponsive;
       //화면 분할 수를 partition으로 표현
-      this.pcPartition = option.pcPartition;
-      this.mobilePartition = option.mobilePartition;
-      this.qtyToSlidePc = option.qtyToSlidePc;
-      this.qtyToSlideMobile = option.qtyToSlideMobile;
+      this.partition;
       this.slideCount;
       this.activeIndex = 0;
       this.lastIndex = this.itemArr.length - 1;
@@ -55,10 +52,10 @@ export default class NewCarousel {
       this.activeIndex = 0;
 
       if (this.isMobile) {
-         this.itemWidth = this.width / this.mobilePartition;
+         this.itemWidth = this.width / this.partition;
          if (this.slideCount > 1) {
             // 전체 사진 개수 - (보여지는 이미지 개수 - 한번에 이동할 이미지 개수) = 이동에 실제 필요한 사진 개수...(?)
-            const a = this.immutableItemArr.length - (this.mobilePartition - this.slideCount);
+            const a = this.immutableItemArr.length - (this.partition - this.slideCount);
             // 이동에 필요한 이미지 개수 / 한번에 이동할 이미지 개수
             const b = a / this.slideCount;
             // 소수점을 일단 반 올림 한 뒤 -1
@@ -66,18 +63,18 @@ export default class NewCarousel {
 
             this.lastIndex = index;
          } else {
-            this.lastIndex = this.immutableItemArr.length - this.mobilePartition * this.slideCount;
+            this.lastIndex = this.immutableItemArr.length - this.partition * this.slideCount;
          }
       } else {
-         this.itemWidth = this.width / this.pcPartition;
+         this.itemWidth = this.width / this.partition;
          if (this.slideCount > 1) {
-            const a = this.immutableItemArr.length - (this.pcPartition - this.slideCount);
+            const a = this.immutableItemArr.length - (this.partition - this.slideCount);
             const b = a / this.slideCount;
             const index = Math.ceil(b) - 1;
 
             this.lastIndex = index;
          } else {
-            this.lastIndex = this.immutableItemArr.length - this.pcPartition * this.slideCount;
+            this.lastIndex = this.immutableItemArr.length - this.partition * this.slideCount;
          }
       }
       //dot 갯수
@@ -156,12 +153,12 @@ export default class NewCarousel {
       const emptyImages = this.calculateIsEmpty();
 
       if (this.isMobile) {
-         slidingX = (100 / this.mobilePartition) * this.slideCount;
+         slidingX = (100 / this.partition) * this.slideCount;
          //아마 여백을 줄이는 로직은 아래와 같을듯. 임시작성
          if (this.slideCount > 1) {
          }
       } else {
-         slidingX = (100 / this.pcPartition) * this.slideCount;
+         slidingX = (100 / this.partition) * this.slideCount;
          if (this.slideCount > 1 && emptyImages > 0) {
             if (this.activeIndex === this.lastIndex) {
                const a = slidingX;
@@ -186,7 +183,7 @@ export default class NewCarousel {
       } else {
          let n;
          const x = this.immutableItemArr.length;
-         const y = this.pcPartition;
+         const y = this.partition;
          const z = this.slideCount;
          //마지막 인덱스에서 비는 이미지의 개수 = n, 0이면 비지 않는 완전한 이미지
          n = (y - (x % z)) % z;
@@ -238,11 +235,13 @@ export default class NewCarousel {
          this.currentIsMobile = false;
          this.isMobile = false;
          this.slideCount = this.option.qtyToSlidePc;
+         this.partition = this.option.pcPartition;
       } else if (this.currentWidth < 769 && this.currentIsMobile === undefined) {
          //mobile
          this.currentIsMobile = true;
          this.isMobile = true;
          this.slideCount = this.option.qtyToSlideMobile;
+         this.partition = this.option.mobilePartition;
       }
    }
 
@@ -264,10 +263,12 @@ export default class NewCarousel {
          if (this.isMobile) {
             this.currentIsMobile = true;
             this.slideCount = this.option.qtyToSlideMobile;
+            this.partition = this.option.mobilePartition;
             this.init();
          } else {
             this.currentIsMobile = false;
             this.slideCount = this.option.qtyToSlidePc;
+            this.partition = this.option.pcPartition;
             this.init();
          }
       }
