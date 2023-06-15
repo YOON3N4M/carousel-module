@@ -2,11 +2,11 @@ export default class NewCarousel {
    constructor(target, option) {
       this.target = target;
       this.option = option;
-      this.immutableItemArr = option.data;
-      this.itemArr = option.data;
-      this.width = parseInt(option.width);
-      this.isResponsive = option.isResponsive;
-      //화면 분할 수를 partition으로 표현
+      this.immutableItemArr = this.option.data;
+      this.itemArr = this.option.data;
+      this.width = parseInt(this.option.width);
+      this.isResponsive = this.option.isResponsive;
+      //화면 분할 수를 partition으로 표현 / 이동하는 이미지 수를 slideCount로 표현
       this.partition;
       this.slideCount;
       this.activeIndex = 0;
@@ -59,6 +59,7 @@ export default class NewCarousel {
          const b = a / this.slideCount;
          // 소수점을 일단 반 올림 한 뒤 -1
          const index = Math.ceil(b) - 1;
+
          this.lastIndex = index;
       } else {
          this.lastIndex = this.immutableItemArr.length - this.partition * this.slideCount;
@@ -66,7 +67,7 @@ export default class NewCarousel {
 
       //dot 갯수
       this.dotQtyArr = this.immutableItemArr.slice(0, this.lastIndex + 1);
-      console.log(this.dotQtyArr);
+
       /*현재 사용하지 않는 메소드 주석처리
       this.reconstructionTemplate();*/
 
@@ -137,7 +138,6 @@ export default class NewCarousel {
 
    sliding() {
       let slidingX;
-      this.calculateIsEmpty();
       const emptyImages = this.calculateIsEmpty();
 
       slidingX = (100 / this.partition) * this.slideCount;
@@ -158,19 +158,17 @@ export default class NewCarousel {
    }
 
    calculateIsEmpty() {
-      let n;
       const x = this.immutableItemArr.length;
       const y = this.partition;
       const z = this.slideCount;
       //마지막 인덱스에서 비는 이미지의 개수 = n, 0이면 비지 않는 완전한 이미지
-      n = (y - (x % z)) % z;
-      console.log(n);
+      const n = (y - (x % z)) % z;
+
       return n;
    }
 
    onDotClick(event) {
       const direction = event.target.dataset.index;
-
       this.activeIndex = parseInt(direction);
       this.sliding();
    }
@@ -210,14 +208,14 @@ export default class NewCarousel {
          //pc
          this.currentIsMobile = false;
          this.isMobile = false;
-         this.slideCount = this.option.qtyToSlidePc;
-         this.partition = this.option.pcPartition;
+         this.slideCount = this.option.deviceOption.pcSlideCount;
+         this.partition = this.option.deviceOption.pcPartition;
       } else if (this.currentWidth < 769 && this.currentIsMobile === undefined) {
          //mobile
          this.currentIsMobile = true;
          this.isMobile = true;
-         this.slideCount = this.option.qtyToSlideMobile;
-         this.partition = this.option.mobilePartition;
+         this.slideCount = this.option.deviceOption.mobileSlideCount;
+         this.partition = this.option.deviceOption.mobilePartition;
       }
    }
 
@@ -238,13 +236,13 @@ export default class NewCarousel {
       if (this.currentIsMobile !== this.isMobile) {
          if (this.isMobile) {
             this.currentIsMobile = true;
-            this.slideCount = this.option.qtyToSlideMobile;
-            this.partition = this.option.mobilePartition;
+            this.slideCount = this.option.deviceOption.mobileSlideCount;
+            this.partition = this.option.deviceOption.mobilePartition;
             this.init();
          } else {
             this.currentIsMobile = false;
-            this.slideCount = this.option.qtyToSlidePc;
-            this.partition = this.option.pcPartition;
+            this.slideCount = this.option.deviceOption.pcSlideCount;
+            this.partition = this.option.deviceOption.pcPartition;
             this.init();
          }
       }
