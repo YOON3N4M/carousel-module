@@ -2,15 +2,13 @@ export default class NewCarousel {
    constructor(target, option) {
       this.target = target;
       this.option = option;
-      this.immutableItemArr = this.option.data;
-      this.itemArr = this.option.data;
+      this.dataArr = this.option.data;
       this.width = parseInt(this.option.width);
       this.isResponsive = this.option.isResponsive;
-      //화면 분할 수를 partition으로 표현 / 이동하는 이미지 수를 slideCount로 표현
-      this.partition;
-      this.slideCount;
+      this.slidesPerView;
+      this.slidesPerGroup;
       this.activeIndex = 0;
-      this.lastIndex = this.itemArr.length - 1;
+      this.lastIndex = this.dataArr.length - 1;
       this.carouselWrapper;
       this.carouselContainer;
       this.startX;
@@ -21,7 +19,8 @@ export default class NewCarousel {
       this.currentWidth = window.outerWidth;
       this.itemWidth;
       this.dotQtyArr;
-      this.isMobileInit();
+      this.deviceInit();
+      this.setLastIndex();
       this.init();
    }
 
@@ -48,31 +47,16 @@ export default class NewCarousel {
       최대 인덱스까지 옮긴 후 PC버전으로 변경 됐을때 PC버전엔 없는 index라서 에러가 남
       때문에 Mobile, PC 간 전환이 이루어지면 this.activeIndex를 초기화
       */
+
       this.activeIndex = 0;
-      this.itemWidth = this.width / this.partition;
-
-      if (this.slideCount > 1) {
-         // 전체 사진 개수 - (보여지는 이미지 개수 - 한번에 이동할 이미지 개수) = 이동에 실제 필요한 사진 개수...(?)
-         const a = this.immutableItemArr.length - (this.partition - this.slideCount);
-         // 이동에 필요한 이미지 개수 / 한번에 이동할 이미지 개수
-         const b = a / this.slideCount;
-         // 소수점을 일단 반 올림 한 뒤 -1
-         const index = Math.ceil(b) - 1;
-
-         this.lastIndex = index;
-      } else {
-         this.lastIndex = this.immutableItemArr.length - this.partition * this.slideCount;
-      }
-
-      //dot 갯수
-      this.dotQtyArr = this.immutableItemArr.slice(0, this.lastIndex + 1);
+      this.itemWidth = this.width / this.slidesPerView;
 
       /*현재 사용하지 않는 메소드 주석처리
       this.reconstructionTemplate();*/
 
       return `
       <ul style="transform: translateX(${this.activeIndex}px)" class="carousel-wrapper">
-      ${this.itemArr
+      ${this.dataArr
          .map(
             (item, index) =>
                `
@@ -95,6 +79,24 @@ export default class NewCarousel {
         <button data-direction="next" class="next arrow">></button>
       </div>
       `;
+   }
+
+   setLastIndex() {
+      if (this.slidesPerGroup > 1) {
+         // 전체 사진 개수 - (보여지는 이미지 개수 - 한번에 이동할 이미지 개수) = 이동에 실제 필요한 사진 개수...(?)
+         const a = this.dataArr.length - (this.slidesPerView - this.slidesPerGroup);
+         // 이동에 필요한 이미지 개수 / 한번에 이동할 이미지 개수
+         const b = a / this.slidesPerGroup;
+         // 소수점을 일단 반 올림 한 뒤 -1
+         const index = Math.ceil(b) - 1;
+
+         this.lastIndex = index;
+      } else {
+         this.lastIndex = this.dataArr.length - this.slidesPerView * this.slidesPerGroup;
+      }
+
+      //dot 갯수
+      this.dotQtyArr = this.dataArr.slice(0, this.lastIndex + 1);
    }
 
    addEvent() {
@@ -139,14 +141,14 @@ export default class NewCarousel {
       let slidingX;
       const emptyImages = this.calculateIsEmpty();
 
-      slidingX = (100 / this.partition) * this.slideCount;
+      slidingX = (100 / this.slidesPerView) * this.slidesPerGroup;
       //아마 여백을 줄이는 로직은 아래와 같을듯. 임시작성
 
-      if (this.slideCount > 1 && emptyImages > 0) {
+      if (this.slidesPerGroup > 1 && emptyImages > 0) {
          if (this.activeIndex === this.lastIndex) {
             const a = slidingX;
             const b = slidingX * (this.activeIndex - 1); //마지막 인덱스 전 -x 값
-            const c = b + a * (emptyImages / this.slideCount);
+            const c = b + a * (emptyImages / this.slidesPerGroup);
 
             slidingX = c / this.lastIndex;
          }
@@ -157,9 +159,9 @@ export default class NewCarousel {
    }
 
    calculateIsEmpty() {
-      const x = this.immutableItemArr.length;
-      const y = this.partition;
-      const z = this.slideCount;
+      const x = this.dataArr.length;
+      const y = this.slidesPerView;
+      const z = this.slidesPerGroup;
       //마지막 인덱스에서 비는 이미지의 개수 = n, 0이면 비지 않는 완전한 이미지
       const n = (y - (x % z)) % z;
 
@@ -197,7 +199,7 @@ export default class NewCarousel {
       }
    }
 
-   isMobileInit() {
+   deviceInit() {
       //크롬 개발자 도구에서 컨트롤 할 수 있는 값 기준
       this.currentWidth = window.outerWidth;
 
@@ -206,14 +208,14 @@ export default class NewCarousel {
          //pc
          this.currentIsMobile = false;
          this.isMobile = false;
-         this.slideCount = this.option.deviceOption.pcSlideCount;
-         this.partition = this.option.deviceOption.pcPartition;
+         this.slidesPerGroup = this.option.deviceOption.pcSlidesPerGroup;
+         this.slidesPerView = this.option.deviceOption.pcSlidesPerView;
       } else if (this.currentWidth < 769 && this.currentIsMobile === undefined) {
          //mobile
          this.currentIsMobile = true;
          this.isMobile = true;
-         this.slideCount = this.option.deviceOption.mobileSlideCount;
-         this.partition = this.option.deviceOption.mobilePartition;
+         this.slidesPerGroup = this.option.deviceOption.mobileSlidesPerGroup;
+         this.slidesPerView = this.option.deviceOption.mobileSlidesPerView;
       }
    }
 
@@ -234,13 +236,13 @@ export default class NewCarousel {
       if (this.currentIsMobile !== this.isMobile) {
          if (this.isMobile) {
             this.currentIsMobile = true;
-            this.slideCount = this.option.deviceOption.mobileSlideCount;
-            this.partition = this.option.deviceOption.mobilePartition;
+            this.slidesPerGroup = this.option.deviceOption.mobileSlidesPerGroup;
+            this.slidesPerView = this.option.deviceOption.mobileSlidesPerView;
             this.init();
          } else {
             this.currentIsMobile = false;
-            this.slideCount = this.option.deviceOption.pcSlideCount;
-            this.partition = this.option.deviceOption.pcPartition;
+            this.slidesPerGroup = this.option.deviceOption.pcSlidesPerGroup;
+            this.slidesPerView = this.option.deviceOption.pcSlidesPerView;
             this.init();
          }
       }
@@ -253,27 +255,27 @@ export default class NewCarousel {
          //슬라이드의 크기
          this.itemWidth = this.width / this.partition;
          //인덱스
-         const dotQty = Math.ceil(this.immutableItemArr.length / this.partition);
-         this.dotQtyArr = this.itemArr.slice(0, dotQty);
+         const dotQty = Math.ceil(this.dataArr.length / this.partition);
+         this.dotQtyArr = this.dataArr.slice(0, dotQty);
          //if PC 버전의 슬라이드 갯수를 지정했다면
          if (this.pcSlideQty !== undefined) {
-            this.itemArr = this.immutableItemArr.slice(0, this.pcSlideQty);
+            this.dataArr = this.dataArr.slice(0, this.pcSlideQty);
          }
          //파티션의 갯수가 2이상일때 계산된 숫자(dotQty)로 lastIndex 설정
          if (this.partition > 1) {
             this.lastIndex = this.dotQtyArr.length - 1;
          } else {
-            this.lastIndex = this.itemArr.length - 1;
+            this.lastIndex = this.dataArr.length - 1;
          }
       } else {
          //Mobile 버전
          this.itemWidth = this.width;
          //if Mobile 버전의 슬라이드 갯수를 지정했다면
          if (this.mobileSlideQty !== undefined) {
-            this.itemArr = this.immutableItemArr.slice(0, this.mobileSlideQty);
+            this.dataArr = this.dataArr.slice(0, this.mobileSlideQty);
          }
-         this.dotQtyArr = this.itemArr;
-         this.lastIndex = this.itemArr.length - 1;
+         this.dotQtyArr = this.dataArr;
+         this.lastIndex = this.dataArr.length - 1;
       }
    }
    */
