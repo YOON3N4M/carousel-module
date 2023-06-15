@@ -21,7 +21,6 @@ export default class NewCarousel {
       this.currentWidth = window.outerWidth;
       this.itemWidth;
       this.dotQtyArr;
-      this.isImperfection;
       this.isMobileInit();
       this.init();
    }
