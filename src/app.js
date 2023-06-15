@@ -44,8 +44,8 @@ class App {
          data: last,
          width: testCarousel.dataset.width,
          isResponsive: true,
-         pcPartition: 4,
-         qtyToSlidePc: 3,
+         pcPartition: 3,
+         qtyToSlidePc: 2,
          mobilePartition: 5,
          qtyToSlideMobile: 3,
       };

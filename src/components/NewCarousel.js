@@ -151,17 +151,24 @@ export default class NewCarousel {
    sliding() {
       let slidingX;
       this.calculateIsEmpty();
-      //이부분 qtyToSlide 수정한 거 적용 해야함
+      const emptyImages = this.calculateIsEmpty();
+
       if (this.isMobile) {
          slidingX = (100 / this.mobilePartition) * this.qtyToSlideMobile;
          //아마 여백을 줄이는 로직은 아래와 같을듯. 임시작성
          if (this.qtyToSlideMobile > 1) {
-            const a = this.immutableItemArr.length % this.mobilePartition;
-            const b = a - (this.mobilePartition - this.qtyToSlideMobile);
-            const c = b / this.mobilePartition;
          }
       } else {
          slidingX = (100 / this.pcPartition) * this.qtyToSlidePc;
+         if (this.qtyToSlidePc > 1 && emptyImages > 0) {
+            if (this.activeIndex === this.lastIndex) {
+               const a = slidingX;
+               const b = slidingX * (this.activeIndex - 1); //마지막 인덱스 전 -x 값
+               const c = b + a * (emptyImages / this.qtyToSlidePc);
+               console.log(emptyImages);
+               slidingX = c / this.lastIndex;
+            }
+         }
       }
 
       this.carouselWrapper.style.transform = `translateX(${-slidingX * this.activeIndex}%)`;
@@ -180,7 +187,9 @@ export default class NewCarousel {
          const y = this.pcPartition;
          const z = this.qtyToSlidePc;
          //마지막 인덱스에서 비는 이미지의 개수 = n, 0이면 비지 않는 완전한 이미지
-         n = y - ((x % z) % z);
+         n = (y - (x % z)) % z;
+         console.log(n);
+         return n;
       }
    }
 
