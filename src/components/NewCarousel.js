@@ -60,7 +60,6 @@ export default class NewCarousel {
          `,
          )
          .join("");
-
       return `
       <ul style="transform: translateX(${this.activeIndex}px)" class="slide-wrapper">
       ${slideItems}
@@ -89,7 +88,6 @@ export default class NewCarousel {
       } else {
          this.lastIndex = this.dataArr.length - this.slidesPerView * this.slidesPerGroup;
       }
-
       //dot 갯수
       this.dotArr = this.dataArr.slice(0, this.lastIndex + 1);
    }
@@ -106,8 +104,8 @@ export default class NewCarousel {
          dotBtnList[i].addEventListener("click", event => this.onDotClick(event));
       }
       //스와이프 기능
-      this.slideWrapper.addEventListener("touchstart", event => this.touchStart(event));
-      this.slideWrapper.addEventListener("touchend", event => this.touchEnd(event));
+      this.slideWrapper.addEventListener("touchstart", event => this.onTouchStart(event));
+      this.slideWrapper.addEventListener("touchend", event => this.onTouchEnd(event));
       //반응형 (PC-mobile 캐러셀 전환)
       window.addEventListener("resize", () => this.onResizing());
    }
@@ -179,11 +177,11 @@ export default class NewCarousel {
       dotArr[this.activeIndex].classList.add("active");
    }
 
-   touchStart(event) {
+   onTouchStart(event) {
       this.startX = event.changedTouches[0].pageX;
    }
 
-   touchEnd(event) {
+   onTouchEnd(event) {
       this.endX = event.changedTouches[0].pageX;
       //터치가 끝날때 시작좌표, 끝좌표를 비교해서 방향감지
       if (this.startX > this.endX) {
