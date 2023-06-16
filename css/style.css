@@ -23,7 +23,7 @@ button {
    overflow: hidden;
    margin: 0 auto;
 }
-.carousel-wrapper {
+.slide-wrapper {
    display: flex;
    flex-direction: row;
    padding: 0;
