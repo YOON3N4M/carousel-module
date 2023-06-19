@@ -138,11 +138,11 @@ export default class NewCarousel {
 
       if (this.slidesPerGroup > 1 && emptyImages > 0) {
          if (this.activeIndex === this.lastIndex) {
-            const a = slidingX;
+            const a = slidingX; // 일반적으로 작동하는 slidingX의 너비
             const b = slidingX * (this.activeIndex - 1); //마지막 인덱스 전 -x 값
             const c = b + a * (emptyImages / this.slidesPerGroup);
-
-            slidingX = c / this.lastIndex;
+            console.log(a, b, c);
+            //slidingX = c / this.lastIndex;
          }
       }
 
@@ -156,7 +156,8 @@ export default class NewCarousel {
       const z = this.slidesPerGroup;
       //마지막 인덱스에서 비는 이미지의 개수 = n, 0이면 빈 이미지가 없는 완전한 슬라이드 뷰
       const n = (y - (x % z)) % z;
-
+      console.log(y - (x % z), z, "비는 이미지:", n);
+      console.log((x - (y - z)) / z - 1);
       return n;
    }
 
@@ -229,10 +230,12 @@ export default class NewCarousel {
       if (this.isMobile) {
          this.currentIsMobile = true;
          this.setDeviceOption();
+         this.setLastIndex();
          this.init();
       } else {
          this.currentIsMobile = false;
          this.setDeviceOption();
+         this.setLastIndex();
          this.init();
       }
    }

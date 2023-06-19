@@ -11,7 +11,7 @@ class App {
          data: last,
          width: testCarousel.dataset.width,
          isResponsive: true,
-         deviceOption: { pcSlidesPerView: 3, pcSlidesPerGroup: 2, mobileSlidesPerView: 5, mobileSlidesPerGroup: 2 },
+         deviceOption: { pcSlidesPerView: 5, pcSlidesPerGroup: 5, mobileSlidesPerView: 5, mobileSlidesPerGroup: 4 },
       };
 
       new NewCarousel(testCarousel, testOption);
