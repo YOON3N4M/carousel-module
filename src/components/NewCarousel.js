@@ -19,6 +19,7 @@ export default class NewCarousel {
       this.currentWidth = window.outerWidth;
       this.slideWidth;
       this.dotArr;
+      this.emptyImages;
       this.deviceInit();
       this.setLastIndex();
       this.init();
@@ -131,22 +132,21 @@ export default class NewCarousel {
    }
 
    sliding() {
+      let slidingXTemp;
       let slidingX;
-      const emptyImages = this.calculateEmptyImages();
 
-      slidingX = (100 / this.slidesPerView) * this.slidesPerGroup;
+      slidingXTemp = (100 / this.slidesPerView) * this.slidesPerGroup;
+      slidingX = slidingXTemp * this.activeIndex;
 
-      if (this.slidesPerGroup > 1 && emptyImages > 0) {
+      if (this.slidesPerGroup > 1 && this.emptyImages > 0) {
          if (this.activeIndex === this.lastIndex) {
-            const a = slidingX; // 일반적으로 작동하는 slidingX의 너비
-            const b = slidingX * (this.activeIndex - 1); //마지막 인덱스 전 -x 값
-            const c = b + a * (emptyImages / this.slidesPerGroup);
-            console.log(a, b, c);
-            //slidingX = c / this.lastIndex;
+            const a = slidingXTemp * (this.activeIndex - 1); //마지막 인덱스 전 -x 이동거리
+            const b = a + (100 / this.slidesPerView) * (this.slidesPerGroup - this.emptyImages);
+            slidingX = b;
          }
       }
 
-      this.slideWrapper.style.transform = `translateX(${-slidingX * this.activeIndex}%)`;
+      this.slideWrapper.style.transform = `translateX(${-slidingX}%)`;
       this.controlIndicator();
    }
 
@@ -156,8 +156,7 @@ export default class NewCarousel {
       const z = this.slidesPerGroup;
       //마지막 인덱스에서 비는 이미지의 개수 = n, 0이면 빈 이미지가 없는 완전한 슬라이드 뷰
       const n = (y - (x % z)) % z;
-      console.log(y - (x % z), z, "비는 이미지:", n);
-      console.log((x - (y - z)) / z - 1);
+
       return n;
    }
 
@@ -248,6 +247,7 @@ export default class NewCarousel {
          this.slidesPerGroup = this.option.deviceOption.pcSlidesPerGroup;
          this.slidesPerView = this.option.deviceOption.pcSlidesPerView;
       }
+      this.emptyImages = this.calculateEmptyImages();
    }
    /* 브라우저 리사이징으로 기기 전환이 감지 되면 그에 맞는 템플릿으로 재구성
    reconstructionTemplate() {
