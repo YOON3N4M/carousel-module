@@ -34,22 +34,13 @@ export default class OverlayImage {
       window.addEventListener("resize", () => this.setResizing());
    }
 
-   setResizing() {
-      if (!this.timer) {
-         this.timer = setTimeout(() => {
-            this.timer = null;
-
-            this.leftBox.style.width = `${50}%`;
-            this.rightBox.style.width = `${50}%`;
-            this.handle.style.left = `${this.leftBox.offsetWidth}px`;
-            this.initialHandleOffsetLeft = this.leftBox.offsetWidth;
-         }, 200);
-      }
-   }
-
    start(e) {
       this.prevPosX = e.clientX;
       this.isPress = true;
+   }
+
+   end() {
+      this.isPress = false;
    }
 
    onHandleMove(e) {
@@ -66,6 +57,19 @@ export default class OverlayImage {
       }
    }
 
+   setResizing() {
+      if (!this.timer) {
+         this.timer = setTimeout(() => {
+            this.timer = null;
+
+            this.leftBox.style.width = `${50}%`;
+            this.rightBox.style.width = `${50}%`;
+            this.handle.style.left = `${this.leftBox.offsetWidth}px`;
+            this.initialHandleOffsetLeft = this.leftBox.offsetWidth;
+         }, 200);
+      }
+   }
+
    changeBoxWidth() {
       const x = this.initialHandleOffsetLeft;
       const y = this.handle.offsetLeft;
@@ -75,9 +79,5 @@ export default class OverlayImage {
 
       this.leftBox.style.width = `${50 - halfOfPercentage}%`;
       this.rightBox.style.width = `${100 - changedLeftBoxWidth}%`;
-   }
-
-   end() {
-      this.isPress = false;
    }
 }
