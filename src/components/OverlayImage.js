@@ -44,16 +44,14 @@ export default class OverlayImage {
    }
 
    onHandleMove(e) {
-      if (this.isPress) {
-         if (!this.timer) {
-            this.timer = setTimeout(() => {
-               this.timer = null;
-               const posX = this.prevPosX - e.clientX;
-               this.prevPosX = e.clientX;
-               this.handle.style.left = this.handle.offsetLeft - posX + "px";
-               this.changeBoxWidth();
-            }, 10);
-         }
+      if (this.isPress && !this.timer) {
+         this.timer = setTimeout(() => {
+            this.timer = null;
+            const posX = this.prevPosX - e.clientX;
+            this.prevPosX = e.clientX;
+            this.handle.style.left = this.handle.offsetLeft - posX + "px";
+            this.changeBoxWidth();
+         }, 10);
       }
    }
 
@@ -61,7 +59,6 @@ export default class OverlayImage {
       if (!this.timer) {
          this.timer = setTimeout(() => {
             this.timer = null;
-
             this.leftBox.style.width = `${50}%`;
             this.rightBox.style.width = `${50}%`;
             this.handle.style.left = `${this.leftBox.offsetWidth}px`;
