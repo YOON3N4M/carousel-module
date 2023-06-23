@@ -31,11 +31,23 @@ export default class OverlayImage {
       this.target.addEventListener("mousedown", e => this.start(e));
       this.target.addEventListener("mouseup", e => this.end());
       this.target.addEventListener("mousemove", e => this.onHandleMove(e));
+      window.addEventListener("resize", () => this.setResizing());
+   }
+
+   setResizing() {
+      if (!this.timer) {
+         this.timer = setTimeout(() => {
+            this.timer = null;
+
+            this.leftBox.style.width = `${50}%`;
+            this.rightBox.style.width = `${50}%`;
+            this.handle.style.left = `${this.leftBox.offsetWidth}px`;
+            this.initialHandleOffsetLeft = this.leftBox.offsetWidth;
+         }, 200);
+      }
    }
 
    start(e) {
-      console.log(this);
-      console.log(this.initialHandleOffsetLeft);
       this.prevPosX = e.clientX;
       this.isPress = true;
    }
