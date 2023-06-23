@@ -2,8 +2,8 @@
    display: flex;
    position: relative;
    max-width: 1200px;
-   height: 23.4vw;
-
+   height: 23.15vw;
+   max-height: 50vw;
    background-color: gray;
    margin: 0 auto;
    z-index: 1500;
