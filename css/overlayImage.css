@@ -1,14 +1,17 @@
 .overlay-image-container {
    display: flex;
    position: relative;
-   width: 80vw;
-   height: 500px;
+   max-width: 1200px;
+   height: 23.4vw;
+
    background-color: gray;
    margin: 0 auto;
    z-index: 1500;
+   cursor: pointer;
 }
 
 .handle {
+   opacity: 0.3;
    width: 40px;
    height: 40px;
    background-color: white;
@@ -19,10 +22,20 @@
    border-radius: 50%;
 }
 .left-box {
+   display: flex;
    height: 100%;
    background-color: rgb(255, 99, 99);
+   overflow: hidden;
 }
+
 .right-box {
+   display: flex;
+   justify-content: flex-end;
    height: 100%;
    background-color: rgb(125, 98, 243);
+   text-align: right;
+   overflow: hidden;
+}
+
+.overlay-image-r {
 }
