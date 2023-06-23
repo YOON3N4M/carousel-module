@@ -8,10 +8,21 @@
    margin: 0 auto;
    z-index: 1500;
    cursor: pointer;
+
+   -webkit-user-select: none;
+   -khtml-user-select: none;
+   -moz-user-select: none;
+   -o-user-select: none;
+   user-select: none;
+   -webkit-user-drag: none;
+   -khtml-user-drag: none;
+   -moz-user-drag: none;
+   -o-user-drag: none;
+   user-drag: none;
 }
 
 .handle {
-   opacity: 0.3;
+   opacity: 1;
    width: 40px;
    height: 40px;
    background-color: white;
@@ -20,6 +31,12 @@
    top: 50%;
    cursor: pointer;
    border-radius: 50%;
+   /* 
+   transform이 아닌 margin값을 음수로 핸들 위치를 조정하면 이벤트에 에러가 생김
+   해당 값은 핸들 요소의 width 값 반을 음수로 할당하면 됨.
+   ex) 핸들 50px => translateX(-25px)
+   */
+   transform: translateX(-20px);
 }
 .left-box {
    display: flex;
@@ -37,5 +54,15 @@
    overflow: hidden;
 }
 
-.overlay-image-r {
+.overlay-image {
+   -webkit-user-select: none;
+   -khtml-user-select: none;
+   -moz-user-select: none;
+   -o-user-select: none;
+   user-select: none;
+   -webkit-user-drag: none;
+   -khtml-user-drag: none;
+   -moz-user-drag: none;
+   -o-user-drag: none;
+   user-drag: none;
 }
