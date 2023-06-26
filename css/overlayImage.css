@@ -7,6 +7,7 @@
    background-color: gray;
    margin: 0 auto;
    z-index: 1500;
+   overflow: hidden;
 
    -webkit-user-select: none;
    -khtml-user-select: none;

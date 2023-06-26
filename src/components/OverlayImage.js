@@ -25,6 +25,7 @@ export default class OverlayImage {
 
    addEvent() {
       this.handle.addEventListener("mousedown", e => this.start(e));
+      this.handle.addEventListener("keydown", e => this.onArrowKeyDown(e));
       this.target.addEventListener("mouseup", () => this.end());
       this.target.addEventListener("mousemove", e => this.onHandleMove(e));
    }
@@ -32,6 +33,10 @@ export default class OverlayImage {
    start(e) {
       this.prevPosX = e.clientX;
       this.isPress = true;
+   }
+
+   end() {
+      this.isPress = false;
    }
 
    onHandleMove(e) {
@@ -49,8 +54,14 @@ export default class OverlayImage {
       }, 10);
    }
 
-   end() {
-      this.isPress = false;
+   onArrowKeyDown(e) {
+      if (e.key === "ArrowRight") {
+         this.handleLeftValue++;
+      } else if (e.key === "ArrowLeft") {
+         this.handleLeftValue--;
+      }
+      this.handle.style.left = `${this.handleLeftValue}%`;
+      this.changeBoxWidth();
    }
 
    changeBoxWidth() {
