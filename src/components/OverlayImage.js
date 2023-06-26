@@ -56,9 +56,9 @@ export default class OverlayImage {
 
    onArrowKeyDown(e) {
       if (e.key === "ArrowRight") {
-         this.handleLeftValue++;
+         this.handleLeftValue > 99 ? (this.handleLeftValue = 100) : this.handleLeftValue++;
       } else if (e.key === "ArrowLeft") {
-         this.handleLeftValue--;
+         this.handleLeftValue < 1 ? (this.handleLeftValue = 0) : this.handleLeftValue--;
       }
       this.handle.style.left = `${this.handleLeftValue}%`;
       this.changeBoxWidth();
