@@ -50,8 +50,8 @@ export default class OverlayImage {
          this.prevPosX = e.clientX;
          const handleLeftValueTemp = ((this.handle.offsetLeft - posX) / this.target.offsetWidth) * 100;
          if (handleLeftValueTemp > 100 || 0 > handleLeftValueTemp) return;
-
          this.handleLeftValue = handleLeftValueTemp;
+
          this.setGUI();
       }, 10);
    }
