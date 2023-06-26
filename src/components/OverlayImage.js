@@ -20,7 +20,7 @@ export default class OverlayImage {
       this.rightBox.style.width = `${this.rightBoxWidth}%`;
       this.initialHandleOffsetLeft = this.handle.offsetLeft;
       /* 
-      transform이 아닌 margin값을 음수로 핸들 위치를 조정하면 이벤트에 에러가 생김
+      transform이 아닌 margin값을 음수로 핸들 위치를 조정하면 이벤트에 버그가 생김
       해당 값은 핸들 요소의 width 값 반을 음수로 자동으로 할당 되도록 변경
       ex) 핸들 50px => translateX(-25px)
       */
@@ -28,7 +28,7 @@ export default class OverlayImage {
    }
 
    addEvent() {
-      this.target.addEventListener("mousedown", e => this.start(e));
+      this.handle.addEventListener("mousedown", e => this.start(e));
       this.target.addEventListener("mouseup", e => this.end());
       this.target.addEventListener("mousemove", e => this.onHandleMove(e));
       window.addEventListener("resize", () => this.setResizing());
@@ -39,32 +39,33 @@ export default class OverlayImage {
       this.isPress = true;
    }
 
+   onHandleMove(e) {
+      if (!this.isPress) return;
+      if (this.timer) return;
+
+      this.timer = setTimeout(() => {
+         this.timer = null;
+         const posX = this.prevPosX - e.clientX;
+         this.prevPosX = e.clientX;
+         this.handle.style.left = this.handle.offsetLeft - posX + "px";
+         this.changeBoxWidth();
+      }, 10);
+   }
+
    end() {
       this.isPress = false;
    }
 
-   onHandleMove(e) {
-      if (this.isPress && !this.timer) {
-         this.timer = setTimeout(() => {
-            this.timer = null;
-            const posX = this.prevPosX - e.clientX;
-            this.prevPosX = e.clientX;
-            this.handle.style.left = this.handle.offsetLeft - posX + "px";
-            this.changeBoxWidth();
-         }, 10);
-      }
-   }
-
    setResizing() {
-      if (!this.timer) {
-         this.timer = setTimeout(() => {
-            this.timer = null;
-            this.leftBox.style.width = `${50}%`;
-            this.rightBox.style.width = `${50}%`;
-            this.handle.style.left = `${this.leftBox.offsetWidth}px`;
-            this.initialHandleOffsetLeft = this.leftBox.offsetWidth;
-         }, 200);
-      }
+      if (this.timer) return;
+
+      this.timer = setTimeout(() => {
+         this.timer = null;
+         this.leftBox.style.width = `${50}%`;
+         this.rightBox.style.width = `${50}%`;
+         this.handle.style.left = `${this.leftBox.offsetWidth}px`;
+         this.initialHandleOffsetLeft = this.leftBox.offsetWidth;
+      }, 200);
    }
 
    changeBoxWidth() {
