@@ -7,18 +7,14 @@ export default class OverlayImage {
       this.rightBox = document.querySelector(".right-box");
       this.isPress = false;
       this.prevPosX = 0;
-      this.leftBoxWidth = 50;
-      this.rightBoxWidth = 100 - this.leftBoxWidth;
-      this.initialHandleOffsetLeft;
-      this.timer;
+      this.handleLeftValuePercent;
       this.init();
    }
 
    init() {
       this.addEvent();
-      this.leftBox.style.width = `${this.leftBoxWidth}%`;
-      this.rightBox.style.width = `${this.rightBoxWidth}%`;
-      this.initialHandleOffsetLeft = this.handle.offsetLeft;
+      this.leftBox.style.width = `${50}%`;
+      this.rightBox.style.width = `${50}%`;
       /* 
       transform이 아닌 margin값을 음수로 핸들 위치를 조정하면 이벤트에 버그가 생김
       해당 값은 핸들 요소의 width 값 반을 음수로 자동으로 할당 되도록 변경
@@ -29,9 +25,8 @@ export default class OverlayImage {
 
    addEvent() {
       this.handle.addEventListener("mousedown", e => this.start(e));
-      this.target.addEventListener("mouseup", e => this.end());
+      this.target.addEventListener("mouseup", () => this.end());
       this.target.addEventListener("mousemove", e => this.onHandleMove(e));
-      window.addEventListener("resize", () => this.setResizing());
    }
 
    start(e) {
@@ -40,14 +35,17 @@ export default class OverlayImage {
    }
 
    onHandleMove(e) {
+      let timer;
       if (!this.isPress) return;
-      if (this.timer) return;
+      if (timer) return;
 
       this.timer = setTimeout(() => {
-         this.timer = null;
+         timer = null;
          const posX = this.prevPosX - e.clientX;
          this.prevPosX = e.clientX;
-         this.handle.style.left = this.handle.offsetLeft - posX + "px";
+         this.handleLeftValuePercent = ((this.handle.offsetLeft - posX) / this.target.offsetWidth) * 100;
+         //이 아래 줄을 퍼센트로 바꿔야하나ㅏ? 여길 퍼센트로 바꾸면 해결 될듯
+         this.handle.style.left = `${this.handleLeftValuePercent}%`;
          this.changeBoxWidth();
       }, 10);
    }
@@ -56,26 +54,8 @@ export default class OverlayImage {
       this.isPress = false;
    }
 
-   setResizing() {
-      if (this.timer) return;
-
-      this.timer = setTimeout(() => {
-         this.timer = null;
-         this.leftBox.style.width = `${50}%`;
-         this.rightBox.style.width = `${50}%`;
-         this.handle.style.left = `${this.leftBox.offsetWidth}px`;
-         this.initialHandleOffsetLeft = this.leftBox.offsetWidth;
-      }, 200);
-   }
-
    changeBoxWidth() {
-      const x = this.initialHandleOffsetLeft;
-      const y = this.handle.offsetLeft;
-      const percentageChange = (y / x) * 100;
-      const halfOfPercentage = (100 - percentageChange) / 2;
-      const changedLeftBoxWidth = 50 - halfOfPercentage;
-
-      this.leftBox.style.width = `${50 - halfOfPercentage}%`;
-      this.rightBox.style.width = `${100 - changedLeftBoxWidth}%`;
+      this.leftBox.style.width = `${this.handleLeftValuePercent}%`;
+      this.rightBox.style.width = `${100 - this.handleLeftValuePercent}%`;
    }
 }
