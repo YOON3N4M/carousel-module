@@ -7,14 +7,14 @@ export default class OverlayImage {
       this.rightBox = document.querySelector(".right-box");
       this.isPress = false;
       this.prevPosX = 0;
-      this.handleLeftValuePercent;
+      this.handleLeftValue = 50;
       this.init();
    }
 
    init() {
       this.addEvent();
-      this.leftBox.style.width = `${50}%`;
-      this.rightBox.style.width = `${50}%`;
+      this.leftBox.style.width = `${this.handleLeftValue}%`;
+      this.rightBox.style.width = `${100 - this.handleLeftValue}%`;
       /* 
       transform이 아닌 margin값을 음수로 핸들 위치를 조정하면 이벤트에 버그가 생김
       해당 값은 핸들 요소의 width 값 반을 음수로 자동으로 할당 되도록 변경
@@ -43,9 +43,8 @@ export default class OverlayImage {
          timer = null;
          const posX = this.prevPosX - e.clientX;
          this.prevPosX = e.clientX;
-         this.handleLeftValuePercent = ((this.handle.offsetLeft - posX) / this.target.offsetWidth) * 100;
-         //이 아래 줄을 퍼센트로 바꿔야하나ㅏ? 여길 퍼센트로 바꾸면 해결 될듯
-         this.handle.style.left = `${this.handleLeftValuePercent}%`;
+         this.handleLeftValue = ((this.handle.offsetLeft - posX) / this.target.offsetWidth) * 100;
+         this.handle.style.left = `${this.handleLeftValue}%`;
          this.changeBoxWidth();
       }, 10);
    }
@@ -55,7 +54,7 @@ export default class OverlayImage {
    }
 
    changeBoxWidth() {
-      this.leftBox.style.width = `${this.handleLeftValuePercent}%`;
-      this.rightBox.style.width = `${100 - this.handleLeftValuePercent}%`;
+      this.leftBox.style.width = `${this.handleLeftValue}%`;
+      this.rightBox.style.width = `${100 - this.handleLeftValue}%`;
    }
 }
