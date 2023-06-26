@@ -46,18 +46,12 @@ export default class OverlayImage {
 
       this.timer = setTimeout(() => {
          timer = null;
+         const posX = this.prevPosX - e.clientX;
+         this.prevPosX = e.clientX;
+         const handleLeftValueTemp = ((this.handle.offsetLeft - posX) / this.target.offsetWidth) * 100;
+         if (handleLeftValueTemp > 100 || 0 > handleLeftValueTemp) return;
 
-         if (this.handleLeftValue <= 100 && this.handleLeftValue >= 0) {
-            const posX = this.prevPosX - e.clientX;
-            this.prevPosX = e.clientX;
-            console.log(posX);
-            this.handleLeftValue = ((this.handle.offsetLeft - posX) / this.target.offsetWidth) * 100;
-         } else if (this.handleLeftValue > 100) {
-            this.handleLeftValue = 99.5;
-         } else if (this.handleLeftValue < 0) {
-            this.handleLeftValue = 1.5;
-         }
-
+         this.handleLeftValue = handleLeftValueTemp;
          this.handle.style.left = `${this.handleLeftValue}%`;
          this.changeBoxWidth();
       }, 10);
