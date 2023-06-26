@@ -52,8 +52,7 @@ export default class OverlayImage {
          if (handleLeftValueTemp > 100 || 0 > handleLeftValueTemp) return;
 
          this.handleLeftValue = handleLeftValueTemp;
-         this.handle.style.left = `${this.handleLeftValue}%`;
-         this.changeBoxWidth();
+         this.setGUI();
       }, 10);
    }
 
@@ -63,12 +62,13 @@ export default class OverlayImage {
       } else if (e.key === "ArrowLeft") {
          this.handleLeftValue < 1 ? (this.handleLeftValue = 0) : this.handleLeftValue--;
       }
-      this.handle.style.left = `${this.handleLeftValue}%`;
-      this.changeBoxWidth();
+
+      this.setGUI();
    }
 
-   changeBoxWidth() {
+   setGUI() {
       this.leftBox.style.width = `${this.handleLeftValue}%`;
       this.rightBox.style.width = `${100 - this.handleLeftValue}%`;
+      this.handle.style.left = `${this.handleLeftValue}%`;
    }
 }
