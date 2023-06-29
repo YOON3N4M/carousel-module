@@ -1,0 +1,26 @@
+.rolling-number-container {
+   display: flex;
+   width: 800px;
+   margin: 0 auto;
+   margin-top: 10rem;
+}
+
+.rolling-number-container > div {
+   background-color: beige;
+}
+
+.num {
+   display: inline-block;
+   width: 10px;
+   height: 30px;
+   overflow: hidden;
+   text-align: center;
+}
+.num-list {
+   display: inline-block;
+   width: 10px;
+   line-height: 30px;
+   margin-top: 0;
+   text-align: center;
+   transition: margin 0.5s;
+}
