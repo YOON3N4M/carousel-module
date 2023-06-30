@@ -1,24 +1,52 @@
 export default class RollingNumber {
    constructor(target, number) {
-      this.target = target;
+      this.targetArr = [...document.querySelectorAll('div[data-animation="rollingNumber"]')];
       //쉼표 적용을 위해 문자열로 변환
       this.number = String(number);
+      this.spanHeight;
+      this.rollingNumberDivArr;
       this.speed = 20;
       this.delay = 0;
       this.init();
    }
+
    init() {
-      //숫자 내 쉼표
-      const num = this.number.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",").split("");
-      num.forEach((item, i) => {
+      this.targetArr.forEach(el => this.setSlide(el));
+      const numSpan = document.querySelector(".num");
+      this.spanHeight = numSpan.offsetHeight;
+      console.log(this.spanHeight);
+   }
+
+   setSlide(el) {
+      const valueData = el.dataset.value;
+      const replacedValueData = valueData.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",").split("");
+
+      replacedValueData.forEach((item, idx) => {
          const isDot = item == ",";
-         const classId = isDot ? `num-idx-${i}-point` : `num-idx-${i}-${item}`;
          const text = item;
+         const numSpaceArr = [];
 
-         this.target.innerHTML += `<span class="num ${classId}" data-text="${text}">
-         <span class="num-list">0 1 2 3 4 5 6 7 8 9 ,</span>
+         for (var i = 0; i <= parseInt(item); i++) {
+            numSpaceArr.push(i);
+         }
+
+         el.innerHTML += `<div class="slide-wrapper ${item}-of-${valueData}">
+         ${
+            isDot
+               ? ","
+               : `<div class="slide">${numSpaceArr.map(num => `<span class="num">${num}</span>`).join("")}</div>`
+         }
+         </div>`;
+
+         //  const wrapperEl = el.querySelector(`.22233`);
+         // console.log(wrapperEl);
+
+         /* 
+         spanElement.innerHTML += `<span class="num ${classId}" data-text="${text}">
+         ${numSpaceArr.map(i => `<span class="num-list">${i}</span>`)}
          </span>`;
-
+         */
+         /*
          setTimeout(() => {
             if (isDot) {
                const dotEl = document.querySelector(`.${classId}`).querySelector(".num-list");
@@ -28,6 +56,8 @@ export default class RollingNumber {
             }
             this.animate(`.${classId}`);
          }, this.delay * i);
+
+          */
       });
    }
    render() {}

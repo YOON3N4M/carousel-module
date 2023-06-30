@@ -5,22 +5,18 @@
    margin-top: 10rem;
 }
 
-.rolling-number-container > div {
-   background-color: beige;
+.rollingNumber {
+   display: flex;
+   height: 64px;
+
+   border: 1px solid black;
 }
 
-.num {
-   display: inline-block;
-   width: 10px;
-   height: 30px;
-   overflow: hidden;
-   text-align: center;
+.slide {
+   display: flex;
+   flex-direction: column;
+   margin-top: -64px;
 }
-.num-list {
-   display: inline-block;
-   width: 10px;
-   line-height: 30px;
-   margin-top: 0;
-   text-align: center;
-   transition: margin 0.5s;
+.slide > span {
+   font-size: 3rem;
 }

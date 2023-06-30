@@ -9,7 +9,7 @@ class App {
    constructor() {
       const testCarousel = document.querySelector(".test");
       const overlayImage = document.querySelector(".overlay-image-container");
-      const rollingNumberContainer = document.querySelector(".rolling-number-container");
+      const rollingNumberContainer = document.querySelector(".roll");
 
       const testOption = {
          data: last,
@@ -20,7 +20,7 @@ class App {
 
       //  new NewCarousel(testCarousel, testOption);
       new OverlayImage(overlayImage);
-      new RollingNumber(rollingNumberContainer, 321958601);
+      new RollingNumber(rollingNumberContainer, 19621);
    }
 }
 
