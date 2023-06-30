@@ -1,7 +1,9 @@
 export default class RollingNumber {
    constructor(target, number) {
+      this.container = document.querySelector(".rolling-number-container");
       this.targetArr = [...document.querySelectorAll('div[data-animation="rollingNumber"]')];
       //쉼표 적용을 위해 문자열로 변환
+      this.isAct = false;
       this.number = String(number);
       this.spanHeight;
       this.rollingNumberDivArr;
@@ -14,7 +16,20 @@ export default class RollingNumber {
       this.targetArr.forEach(el => this.setSlide(el));
       const numSpan = document.querySelector(".num");
       this.spanHeight = numSpan.offsetHeight;
-      console.log(this.spanHeight);
+      this.setObserver();
+   }
+
+   setObserver() {
+      const observer = new IntersectionObserver((entry, observer) => {
+         entry.forEach(entry => {
+            if (entry.isIntersecting && !this.isAct) {
+               this.isAct = true;
+               console.log("뿅!");
+            }
+         });
+      });
+
+      observer.observe(this.container);
    }
 
    setSlide(el) {

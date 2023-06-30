@@ -20,3 +20,7 @@
 .slide > span {
    font-size: 3rem;
 }
+.blank {
+   width: 100vw;
+   height: 1000px;
+}
