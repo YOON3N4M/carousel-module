@@ -16,6 +16,12 @@ export default class RollingNumber {
 
    init() {
       this.targetArr.forEach(target => (target.innerHTML = `<span class="num">0</span>`));
+      const initialNum = document.querySelector(".num");
+
+      this.targetArr.forEach(t => (t.style.width = `${t.dataset.value.length * initialNum.offsetWidth}px`));
+      this.targetArr.forEach(t => (t.style.height = `${initialNum.offsetHeight}px`));
+      console.log(initialNum.offsetHeight);
+      console.log(this.targetArr[0].dataset.value.length);
    }
 
    whenViewportInit() {
@@ -45,11 +51,15 @@ export default class RollingNumber {
 
       replacedValueData.forEach((item, idx) => {
          const isDot = item == ",";
-         const text = item;
-         const numSpaceArr = [];
+         const intItem = parseInt(item);
+         let numSpaceArr = [];
 
-         for (var i = 0; i <= parseInt(item); i++) {
-            numSpaceArr.push(i);
+         if (intItem === 0) {
+            numSpaceArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+         } else {
+            for (var i = 0; i <= intItem; i++) {
+               numSpaceArr.push(i);
+            }
          }
 
          el.innerHTML += `<div class="slide-wrapper ${item}">
@@ -58,7 +68,7 @@ export default class RollingNumber {
                ? `<span class="roll-dot">,</span>`
                : `<div data-value=${item} class="slide">${numSpaceArr
                     .map(num => `<span class="num">${num}</span>`)
-                    .join("")}}</div>`
+                    .join("")}</div>`
          }
          </div>`;
 
@@ -78,10 +88,13 @@ export default class RollingNumber {
       }, 100);
    }
 
-   animate(item) {
-      const number = parseInt(item);
+   animate() {
       const slideArr = [...document.querySelectorAll(".slide")];
 
-      slideArr.forEach(slide => (slide.style.marginTop = `-${parseInt(slide.dataset.value) * this.spanHeight}px`));
+      slideArr.forEach(slide =>
+         parseInt(slide.dataset.value) === 0
+            ? (slide.style.marginTop = `-${9 * this.spanHeight}px`)
+            : (slide.style.marginTop = `-${parseInt(slide.dataset.value) * this.spanHeight}px`),
+      );
    }
 }

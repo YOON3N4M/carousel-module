@@ -1,25 +1,32 @@
 .rolling-number-container {
    display: flex;
-   width: 800px;
+   width: 400px;
    margin: 0 auto;
    margin-top: 10rem;
-   overflow: hidden;
+   background-color: black;
+   justify-content: space-between;
 }
 
 .rollingNumber {
    display: flex;
-   height: 64px;
-   border: 1px solid black;
+   overflow: hidden;
+   text-align: center;
+   align-items: center;
+   justify-content: center;
+   min-width: 6rem;
+   padding: 0rem 0.5rem;
+   border-bottom: 1px solid black;
+   color: white;
 }
 
 .slide {
    display: flex;
    flex-direction: column;
-   transition: margin 2s;
+   transition: margin 1.5s;
 }
 
 .num {
-   font-size: 3rem;
+   font-size: 1rem;
 }
 .blank {
    width: 100vw;
@@ -27,10 +34,8 @@
 }
 
 .roll-dot {
-   line-height: 5.5rem;
+   opacity: 1;
 }
 
 .slide-wrapper {
-   display: flex;
-   justify-content: right;
 }
