@@ -3,32 +3,31 @@ export default class RollingNumber {
       this.container = document.querySelector(".rolling-number-container");
       this.targetArr = [...document.querySelectorAll('div[data-animation="rollingNumber"]')];
       //쉼표 적용을 위해 문자열로 변환
-      this.isAct = false;
-      this.number = String(number);
+      this.isActive = false;
       this.spanHeight;
       this.rollingNumberDivArr;
-      this.speed = 20;
+      this.setObserver();
+      // 이 아래로는 지워도 될듯
+      this.number = String(number);
+      this.speed = 200;
       this.delay = 0;
-      this.init();
    }
 
-   init() {
+   whenViewportInit() {
       this.targetArr.forEach(el => this.setSlide(el));
       const numSpan = document.querySelector(".num");
       this.spanHeight = numSpan.offsetHeight;
-      this.setObserver();
    }
 
    setObserver() {
       const observer = new IntersectionObserver((entry, observer) => {
          entry.forEach(entry => {
-            if (entry.isIntersecting && !this.isAct) {
-               this.isAct = true;
-               console.log("뿅!");
+            if (entry.isIntersecting && !this.isActive) {
+               this.isActive = true;
+               this.whenViewportInit();
             }
          });
       });
-
       observer.observe(this.container);
    }
 
@@ -45,11 +44,13 @@ export default class RollingNumber {
             numSpaceArr.push(i);
          }
 
-         el.innerHTML += `<div class="slide-wrapper ${item}-of-${valueData}">
+         el.innerHTML += `<div class="slide-wrapper ${item}">
          ${
             isDot
-               ? ","
-               : `<div class="slide">${numSpaceArr.map(num => `<span class="num">${num}</span>`).join("")}</div>`
+               ? `<span class="roll-dot">,</span>`
+               : `<div data-value=${item} class="slide">${numSpaceArr
+                    .map(num => `<span class="num">${num}</span>`)
+                    .join("")}</div>`
          }
          </div>`;
 
@@ -61,36 +62,18 @@ export default class RollingNumber {
          ${numSpaceArr.map(i => `<span class="num-list">${i}</span>`)}
          </span>`;
          */
-         /*
+         if (isDot) return;
+
          setTimeout(() => {
-            if (isDot) {
-               const dotEl = document.querySelector(`.${classId}`).querySelector(".num-list");
-               dotEl.style.transition = "margin";
-               dotEl.style.marginTop = `-${300}px`;
-               return;
-            }
-            this.animate(`.${classId}`);
+            this.animate(item);
          }, this.delay * i);
-
-          */
-      });
+      }, 100);
    }
-   render() {}
 
-   animate(digit) {
-      const el = this.target.querySelector(digit);
-      const numList = el.querySelector(".num-list");
-      const dataText = el.getAttribute("data-text");
-      const dataNum = parseInt(dataText);
-      const pos = dataText == "," ? 10 : dataText;
-      let n = 0;
-      const numInterval = setInterval(() => {
-         numList.style.marginTop = `-${n * 30}px`;
-         if (n >= 10) {
-            clearInterval(numInterval);
-            numList.style.marginTop = `-${pos * 30}px`;
-         }
-         n++;
-      }, this.speed * dataNum);
+   animate(item) {
+      const number = parseInt(item);
+      const slideArr = [...document.querySelectorAll(".slide")];
+
+      slideArr.forEach(slide => (slide.style.marginTop = `-${slide.dataset.value * this.spanHeight}px`));
    }
 }
