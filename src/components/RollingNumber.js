@@ -7,13 +7,19 @@ export default class RollingNumber {
       this.spanHeight;
       this.rollingNumberDivArr;
       this.setObserver();
+      this.init();
       // 이 아래로는 지워도 될듯
       this.number = String(number);
       this.speed = 200;
       this.delay = 0;
    }
 
+   init() {
+      this.targetArr.forEach(target => (target.innerHTML = `<span class="num">0</span>`));
+   }
+
    whenViewportInit() {
+      this.targetArr.forEach(target => (target.innerHTML = ""));
       this.targetArr.forEach(el => this.setSlide(el));
       const numSpan = document.querySelector(".num");
       this.spanHeight = numSpan.offsetHeight;
@@ -23,8 +29,10 @@ export default class RollingNumber {
       const observer = new IntersectionObserver((entry, observer) => {
          entry.forEach(entry => {
             if (entry.isIntersecting && !this.isActive) {
-               this.isActive = true;
-               this.whenViewportInit();
+               setTimeout(() => {
+                  this.isActive = true;
+                  this.whenViewportInit();
+               }, 50);
             }
          });
       });
@@ -50,7 +58,7 @@ export default class RollingNumber {
                ? `<span class="roll-dot">,</span>`
                : `<div data-value=${item} class="slide">${numSpaceArr
                     .map(num => `<span class="num">${num}</span>`)
-                    .join("")}</div>`
+                    .join("")}}</div>`
          }
          </div>`;
 
@@ -74,6 +82,6 @@ export default class RollingNumber {
       const number = parseInt(item);
       const slideArr = [...document.querySelectorAll(".slide")];
 
-      slideArr.forEach(slide => (slide.style.marginTop = `-${slide.dataset.value * this.spanHeight}px`));
+      slideArr.forEach(slide => (slide.style.marginTop = `-${parseInt(slide.dataset.value) * this.spanHeight}px`));
    }
 }

@@ -9,7 +9,6 @@
 .rollingNumber {
    display: flex;
    height: 64px;
-
    border: 1px solid black;
 }
 
@@ -18,7 +17,8 @@
    flex-direction: column;
    transition: margin 2s;
 }
-.slide > span {
+
+.num {
    font-size: 3rem;
 }
 .blank {
