@@ -1,32 +1,31 @@
 export default class RollingNumber {
-   constructor(target, number) {
+   constructor() {
       this.container = document.querySelector(".rolling-number-container");
       this.targetArr = [...document.querySelectorAll('[data-animation="rollingNumber"]')];
       //쉼표 적용을 위해 문자열로 변환
       this.isActive = false;
       this.spanHeight;
       this.rollingNumberDivArr;
-      this.setObserver();
       this.init();
-      // 이 아래로는 지워도 될듯
-      this.number = String(number);
-      this.speed = 200;
-      this.delay = 0;
    }
 
    init() {
+      this.setObserver();
+      this.targetArr.forEach(
+         el => (el.innerHTML += `<span>${el.dataset.headtext !== undefined ? el.dataset.headtext : ""}</span>`),
+      );
       this.targetArr.forEach(target => (target.innerHTML = `<span class="num">0</span>`));
+      this.targetArr.forEach(el => (el.innerHTML += `<span>${el.dataset.tailtext}</span>`));
       const initialNum = document.querySelector(".num");
-
-      // this.targetArr.forEach(t => (t.style.width = `${t.dataset.value.length * initialNum.offsetWidth}px`));
       this.targetArr.forEach(t => (t.style.height = `${initialNum.offsetHeight}px`));
-      console.log(initialNum.offsetHeight);
-      console.log(this.targetArr[0].dataset.value.length);
    }
 
    whenViewportInit() {
+      //초기
       this.targetArr.forEach(target => (target.innerHTML = ""));
-      this.targetArr.forEach(el => (el.innerHTML += `<span>${el.dataset.headtext}</span>`));
+      this.targetArr.forEach(
+         el => (el.innerHTML += `<span>${el.dataset.headtext !== undefined ? el.dataset.headtext : ""}</span>`),
+      );
       this.targetArr.forEach(el => this.setSlide(el));
       this.targetArr.forEach(el => (el.innerHTML += `<span>${el.dataset.tailtext}</span>`));
       const numSpan = document.querySelector(".num");
@@ -34,7 +33,7 @@ export default class RollingNumber {
    }
 
    setObserver() {
-      const observer = new IntersectionObserver((entry, observer) => {
+      const observer = new IntersectionObserver(entry => {
          entry.forEach(entry => {
             if (entry.isIntersecting && !this.isActive) {
                setTimeout(() => {
@@ -49,44 +48,39 @@ export default class RollingNumber {
 
    setSlide(el) {
       const valueData = el.dataset.value;
+      //쉼표를 적용한 문자열의 배열
       const replacedValueData = valueData.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",").split("");
 
-      replacedValueData.forEach((item, idx) => {
+      replacedValueData.forEach(item => {
          const isDot = item == ",";
          const intItem = parseInt(item);
-         let numSpaceArr = [];
+         let slidesOfNum = [];
 
          if (intItem === 0) {
-            numSpaceArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+            slidesOfNum = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
          } else {
             for (var i = 0; i <= intItem; i++) {
-               numSpaceArr.push(i);
+               slidesOfNum.push(i);
             }
          }
 
          el.innerHTML += `<div class="slide-wrapper ${item}">
-         ${
-            isDot
-               ? `<span class="roll-dot">,</span>`
-               : `<div data-value=${item} class="slide">${numSpaceArr
-                    .map(num => `<span class="num">${num}</span>`)
-                    .join("")}</div>`
-         }
+            ${
+               isDot
+                  ? `<span class="roll-dot">,</span>`
+                  : `<div data-value=${item} class="slide">
+                     ${slidesOfNum.map(num => `<span class="num">${num}</span>`).join("")}                   
+                     </div>`
+            }
          </div>`;
 
-         //  const wrapperEl = el.querySelector(`.22233`);
-         // console.log(wrapperEl);
-         /* 
-         spanElement.innerHTML += `<span class="num ${classId}" data-text="${text}">
-         ${numSpaceArr.map(i => `<span class="num-list">${i}</span>`)}
-         </span>`;
-         */
          if (isDot) return;
 
          setTimeout(() => {
-            this.animate(item);
+            console.log(item);
+            this.animate();
          }, 0);
-      }, 100);
+      });
    }
 
    animate() {
