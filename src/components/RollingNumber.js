@@ -57,7 +57,7 @@ export default class RollingNumber {
       const replacedValueData = valueData.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",").split("");
 
       replacedValueData.forEach((item, idx) => {
-         const isDot = item == ",";
+         const isDot = item == "," || item == ".";
          const intItem = parseInt(item);
          const lastIndex = replacedValueData.length > 1 ? replacedValueData.length - 1 : undefined;
          const isLastIndex = idx == lastIndex ? true : false;
@@ -74,7 +74,7 @@ export default class RollingNumber {
          el.innerHTML += `<div class="slide-wrapper ${item}">
             ${
                isDot
-                  ? `<span class="roll-dot">,</span>`
+                  ? `<span class="roll-dot">${item}</span>`
                   : `<div data-value=${item} class="slide ${isLastIndex ? "last-index" : "remain-index"}">
                      ${
                         isLastIndex
@@ -116,6 +116,7 @@ export default class RollingNumber {
 
    onResizing() {
       const mediaQueryWidth = window.innerWidth;
+      console.log(mediaQueryWidth);
       //리사이징 변경 감지
       if (mediaQueryWidth >= 769) {
          //pc
