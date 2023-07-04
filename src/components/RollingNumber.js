@@ -29,18 +29,12 @@ export default class RollingNumber {
    }
 
    whenViewportInit() {
-      //초기
-      this.targetArr.forEach(target => (target.innerHTML = ""));
-      this.targetArr.forEach(
-         el =>
-            (el.innerHTML += `<span class="roll-head-text">${
-               el.dataset.headtext !== undefined ? el.dataset.headtext : ""
-            }</span>`),
-      );
-      this.targetArr.forEach(el => this.setSlide(el));
-      this.targetArr.forEach(
-         el => (el.innerHTML += `<span class="roll-tail-text">${el.dataset.tailtext}</span>`),
-      );
+      //초기 0삭제
+      this.targetArr.forEach(target => target.childNodes[0].remove());
+      this.targetArr.forEach(el => {
+         this.setSlide(el);
+      });
+
       const numSpan = document.querySelector(".roll-num");
       this.spanHeight = numSpan.offsetHeight;
    }
@@ -51,7 +45,7 @@ export default class RollingNumber {
             if (entry.isIntersecting && !this.isActive) {
                setTimeout(() => {
                   this.isActive = true;
-                  //  this.whenViewportInit();
+                  this.whenViewportInit();
                }, 50);
             }
          });
@@ -93,7 +87,11 @@ export default class RollingNumber {
              }
            </div>`;
 
-         el.innerHTML += `<div class="slide-wrapper ${item}">${slideContent}</div>`;
+         //머릿말은 없어도 꼬릿말은 고정적으로 있기에 슬라이드는 꼬릿말의 앞쪽에 dom 생성
+         el.lastChild.insertAdjacentHTML(
+            "beforebegin",
+            `<div class="slide-wrapper ${item}">${slideContent}</div>`,
+         );
 
          if (isDot) return;
 
@@ -141,12 +139,11 @@ export default class RollingNumber {
       if (this.isMobile) {
          this.currentIsMobile = true;
          this.init();
-         this.whenViewportInit();
       } else {
          this.currentIsMobile = false;
          this.init();
-         this.whenViewportInit();
       }
+      this.isActive = false;
    }
 
    /*
