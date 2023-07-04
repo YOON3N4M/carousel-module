@@ -5,7 +5,6 @@ export default class RollingNumber {
       //쉼표 적용을 위해 문자열로 변환
       this.isActive = false;
       this.spanHeight;
-      this.rollingNumberDivArr;
       this.isMobile;
       this.currentIsMobile;
       this.init();
@@ -19,8 +18,9 @@ export default class RollingNumber {
       );
       this.targetArr.forEach(target => (target.innerHTML = `<span class="num">0</span>`));
       this.targetArr.forEach(el => (el.innerHTML += `<span>${el.dataset.tailtext}</span>`));
+
       const initialNum = document.querySelector(".num");
-      //this.targetArr.forEach(t => (t.style.height = `${initialNum.offsetHeight}px`));
+      this.targetArr.forEach(t => (t.style.height = `${initialNum.offsetHeight}px`));
       window.addEventListener("resize", () => this.onResizing());
    }
 
@@ -56,11 +56,13 @@ export default class RollingNumber {
       //쉼표를 적용한 문자열의 배열
       const replacedValueData = valueData.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",").split("");
 
-      replacedValueData.forEach(item => {
+      replacedValueData.forEach((item, idx) => {
          const isDot = item == ",";
          const intItem = parseInt(item);
+         const lastIndex = replacedValueData.length > 1 ? replacedValueData.length - 1 : undefined;
+         const isLastIndex = idx == lastIndex ? true : false;
+         console.log(isLastIndex);
          let slidesOfNum = [];
-
          if (intItem === 0) {
             slidesOfNum = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
          } else {
@@ -73,10 +75,15 @@ export default class RollingNumber {
             ${
                isDot
                   ? `<span class="roll-dot">,</span>`
-                  : `<div data-value=${item} class="slide">
-                     ${slidesOfNum.map(num => `<span class="num">${num}</span>`).join("")}   
+                  : `<div data-value=${item} class="slide ${isLastIndex ? "last-index" : "remain-index"}">
+                     ${
+                        isLastIndex
+                           ? `  ${slidesOfNum.map(num => `<span class="num">${num}</span>`).join("")}   
                      ${slidesOfNum.map(num => `<span class="num">${num}</span>`).join("")}      
-                     ${slidesOfNum.map(num => `<span class="num">${num}</span>`).join("")}      
+                     ${slidesOfNum.map(num => `<span class="num">${num}</span>`).join("")}    `
+                           : ` ${slidesOfNum.map(num => `<span class="num">${num}</span>`).join("")} `
+                     }
+                     
 
                      </div>`
             }
@@ -89,24 +96,21 @@ export default class RollingNumber {
          }, 0);
       });
    }
-
    animate() {
       const slideArr = [...document.querySelectorAll(".slide")];
+      const lastSlideArr = slideArr.filter(div => div.className === "slide last-index");
+      const remainSlideArr = slideArr.filter(div => div.className !== "slide last-index");
 
-      slideArr.forEach(slide =>
-         parseInt(slide.dataset.value) === 0
-            ? (slide.style.marginTop = `-${29 * this.spanHeight}px`)
-            : (slide.style.marginTop = `-${(parseInt(slide.dataset.value) * 3 + 2) * this.spanHeight}px`),
-      );
-   }
-
-   animateShort() {
-      const slideArr = [...document.querySelectorAll(".slide")];
-
-      slideArr.forEach(slide =>
+      remainSlideArr.forEach(slide =>
          parseInt(slide.dataset.value) === 0
             ? (slide.style.marginTop = `-${9 * this.spanHeight}px`)
             : (slide.style.marginTop = `-${parseInt(slide.dataset.value) * this.spanHeight}px`),
+      );
+
+      lastSlideArr.forEach(slide =>
+         parseInt(slide.dataset.value) === 0
+            ? (slide.style.marginTop = `-${29 * this.spanHeight}px`)
+            : (slide.style.marginTop = `-${(parseInt(slide.dataset.value) * 3 + 2) * this.spanHeight}px`),
       );
    }
 
@@ -136,4 +140,16 @@ export default class RollingNumber {
          this.whenViewportInit();
       }
    }
+
+   /*
+   animate() {
+      const slideArr = [...document.querySelectorAll(".slide")];
+   
+      slideArr.forEach(slide =>
+         parseInt(slide.dataset.value) === 0
+            ? (slide.style.marginTop = `-${29 * this.spanHeight}px`)
+            : (slide.style.marginTop = `-${(parseInt(slide.dataset.value) * 3 + 2) * this.spanHeight}px`),
+      );
+   }
+   */
 }
