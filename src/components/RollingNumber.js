@@ -14,12 +14,16 @@ export default class RollingNumber {
       this.setObserver();
       this.targetArr.forEach(
          el =>
-            (el.innerHTML += `<span>${el.dataset.headtext !== undefined ? el.dataset.headtext : ""}</span>`),
+            (el.innerHTML += `<span class="roll-head-text">${
+               el.dataset.headtext !== undefined ? el.dataset.headtext : ""
+            }</span>`),
       );
-      this.targetArr.forEach(target => (target.innerHTML = `<span class="num">0</span>`));
-      this.targetArr.forEach(el => (el.innerHTML += `<span>${el.dataset.tailtext}</span>`));
+      this.targetArr.forEach(target => (target.innerHTML = `<span class="roll-num">0</span>`));
+      this.targetArr.forEach(
+         el => (el.innerHTML += `<span class="roll-tail-text">${el.dataset.tailtext}</span>`),
+      );
 
-      const initialNum = document.querySelector(".num");
+      const initialNum = document.querySelector(".roll-num");
       this.targetArr.forEach(t => (t.style.height = `${initialNum.offsetHeight}px`));
       window.addEventListener("resize", () => this.onResizing());
    }
@@ -29,11 +33,15 @@ export default class RollingNumber {
       this.targetArr.forEach(target => (target.innerHTML = ""));
       this.targetArr.forEach(
          el =>
-            (el.innerHTML += `<span>${el.dataset.headtext !== undefined ? el.dataset.headtext : ""}</span>`),
+            (el.innerHTML += `<span class="roll-head-text">${
+               el.dataset.headtext !== undefined ? el.dataset.headtext : ""
+            }</span>`),
       );
       this.targetArr.forEach(el => this.setSlide(el));
-      this.targetArr.forEach(el => (el.innerHTML += `<span>${el.dataset.tailtext}</span>`));
-      const numSpan = document.querySelector(".num");
+      this.targetArr.forEach(
+         el => (el.innerHTML += `<span class="roll-tail-text">${el.dataset.tailtext}</span>`),
+      );
+      const numSpan = document.querySelector(".roll-num");
       this.spanHeight = numSpan.offsetHeight;
    }
 
@@ -43,7 +51,7 @@ export default class RollingNumber {
             if (entry.isIntersecting && !this.isActive) {
                setTimeout(() => {
                   this.isActive = true;
-                  this.whenViewportInit();
+                  //  this.whenViewportInit();
                }, 50);
             }
          });
@@ -61,8 +69,8 @@ export default class RollingNumber {
          const intItem = parseInt(item);
          const lastIndex = replacedValueData.length > 1 ? replacedValueData.length - 1 : undefined;
          const isLastIndex = idx == lastIndex ? true : false;
-         console.log(isLastIndex);
          let slidesOfNum = [];
+
          if (intItem === 0) {
             slidesOfNum = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
          } else {
@@ -71,23 +79,21 @@ export default class RollingNumber {
             }
          }
 
-         el.innerHTML += `<div class="slide-wrapper ${item}">
-            ${
-               isDot
-                  ? `<span class="roll-dot">${item}</span>`
-                  : `<div data-value=${item} class="slide ${isLastIndex ? "last-index" : "remain-index"}">
-                     ${
-                        isLastIndex
-                           ? `  ${slidesOfNum.map(num => `<span class="num">${num}</span>`).join("")}   
-                     ${slidesOfNum.map(num => `<span class="num">${num}</span>`).join("")}      
-                     ${slidesOfNum.map(num => `<span class="num">${num}</span>`).join("")}    `
-                           : ` ${slidesOfNum.map(num => `<span class="num">${num}</span>`).join("")} `
-                     }
-                     
+         const slideContent = isDot
+            ? `<span class="roll-dot">${item}</span>`
+            : `<div data-value=${item} class="slide ${isLastIndex ? "last-index" : "remain-index"}">
+             ${
+                isLastIndex
+                   ? `
+               ${slidesOfNum.map(num => `<span class="roll-num">${num}</span>`).join("")}
+               ${slidesOfNum.map(num => `<span class="roll-num">${num}</span>`).join("")}
+               ${slidesOfNum.map(num => `<span class="roll-num">${num}</span>`).join("")}
+             `
+                   : slidesOfNum.map(num => `<span class="roll-num">${num}</span>`).join("")
+             }
+           </div>`;
 
-                     </div>`
-            }
-         </div>`;
+         el.innerHTML += `<div class="slide-wrapper ${item}">${slideContent}</div>`;
 
          if (isDot) return;
 
@@ -96,6 +102,7 @@ export default class RollingNumber {
          }, 0);
       });
    }
+
    animate() {
       const slideArr = [...document.querySelectorAll(".slide")];
       const lastSlideArr = slideArr.filter(div => div.className === "slide last-index");

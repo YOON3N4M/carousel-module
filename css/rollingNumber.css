@@ -5,7 +5,6 @@
    margin-top: 10rem;
    background-color: black;
 }
-
 .rollingNumber {
    display: flex;
    overflow: hidden;
@@ -17,7 +16,6 @@
    color: white;
    margin-right: 10px;
 }
-
 .slide {
    display: flex;
    flex-direction: column;
@@ -28,19 +26,16 @@
 .last-index {
    transition: margin 1.7s cubic-bezier(1, 0.5, 0.7, 1);
 }
-
-.num {
+.roll-tail-text,
+.roll-head-text,
+.roll-dot,
+.roll-num {
    font-size: 2rem;
 }
-
 .blank {
    width: 100vw;
    height: 1000px;
 }
-
 .roll-dot {
    opacity: 1;
-}
-
-.slide-wrapper {
 }
