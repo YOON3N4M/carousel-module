@@ -193,7 +193,7 @@ export default class NewCarousel {
 
    deviceInit() {
       //크롬 개발자 도구에서 컨트롤 할 수 있는 값 기준
-      this.currentWidth = window.outerWidth;
+      this.currentWidth = window.innerWidth;
 
       //초기 실행
       if (this.currentWidth > 769 && this.currentIsMobile === undefined) {
@@ -210,7 +210,7 @@ export default class NewCarousel {
    }
 
    onResizing() {
-      this.currentWidth = window.outerWidth;
+      this.currentWidth = window.innerWidth;
       //리사이징 변경 감지
       if (this.currentWidth >= 769) {
          //pc

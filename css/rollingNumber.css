@@ -1,6 +1,5 @@
 .rolling-number-container {
    display: flex;
-
    min-width: 30vw;
    margin: 0 auto;
    margin-top: 10rem;
@@ -17,12 +16,13 @@
    padding: 0rem 0.5rem;
    border-bottom: 1px solid black;
    color: white;
+   height: 50px;
 }
 
 .slide {
    display: flex;
    flex-direction: column;
-   transition: margin 1s ease;
+   transition: margin 1.5s cubic-bezier(0.25, 0.1, 0.1, 1);
 }
 
 .num {

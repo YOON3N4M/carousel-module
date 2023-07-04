@@ -6,25 +6,30 @@ export default class RollingNumber {
       this.isActive = false;
       this.spanHeight;
       this.rollingNumberDivArr;
+      this.isMobile;
+      this.currentIsMobile;
       this.init();
    }
 
    init() {
       this.setObserver();
       this.targetArr.forEach(
-         el => (el.innerHTML += `<span>${el.dataset.headtext !== undefined ? el.dataset.headtext : ""}</span>`),
+         el =>
+            (el.innerHTML += `<span>${el.dataset.headtext !== undefined ? el.dataset.headtext : ""}</span>`),
       );
       this.targetArr.forEach(target => (target.innerHTML = `<span class="num">0</span>`));
       this.targetArr.forEach(el => (el.innerHTML += `<span>${el.dataset.tailtext}</span>`));
       const initialNum = document.querySelector(".num");
-      this.targetArr.forEach(t => (t.style.height = `${initialNum.offsetHeight}px`));
+      //this.targetArr.forEach(t => (t.style.height = `${initialNum.offsetHeight}px`));
+      window.addEventListener("resize", () => this.onResizing());
    }
 
    whenViewportInit() {
       //초기
       this.targetArr.forEach(target => (target.innerHTML = ""));
       this.targetArr.forEach(
-         el => (el.innerHTML += `<span>${el.dataset.headtext !== undefined ? el.dataset.headtext : ""}</span>`),
+         el =>
+            (el.innerHTML += `<span>${el.dataset.headtext !== undefined ? el.dataset.headtext : ""}</span>`),
       );
       this.targetArr.forEach(el => this.setSlide(el));
       this.targetArr.forEach(el => (el.innerHTML += `<span>${el.dataset.tailtext}</span>`));
@@ -69,7 +74,10 @@ export default class RollingNumber {
                isDot
                   ? `<span class="roll-dot">,</span>`
                   : `<div data-value=${item} class="slide">
-                     ${slidesOfNum.map(num => `<span class="num">${num}</span>`).join("")}                   
+                     ${slidesOfNum.map(num => `<span class="num">${num}</span>`).join("")}   
+                     ${slidesOfNum.map(num => `<span class="num">${num}</span>`).join("")}      
+                     ${slidesOfNum.map(num => `<span class="num">${num}</span>`).join("")}      
+
                      </div>`
             }
          </div>`;
@@ -77,7 +85,6 @@ export default class RollingNumber {
          if (isDot) return;
 
          setTimeout(() => {
-            console.log(item);
             this.animate();
          }, 0);
       });
@@ -88,8 +95,45 @@ export default class RollingNumber {
 
       slideArr.forEach(slide =>
          parseInt(slide.dataset.value) === 0
+            ? (slide.style.marginTop = `-${29 * this.spanHeight}px`)
+            : (slide.style.marginTop = `-${(parseInt(slide.dataset.value) * 3 + 2) * this.spanHeight}px`),
+      );
+   }
+
+   animateShort() {
+      const slideArr = [...document.querySelectorAll(".slide")];
+
+      slideArr.forEach(slide =>
+         parseInt(slide.dataset.value) === 0
             ? (slide.style.marginTop = `-${9 * this.spanHeight}px`)
             : (slide.style.marginTop = `-${parseInt(slide.dataset.value) * this.spanHeight}px`),
       );
+   }
+
+   onResizing() {
+      const mediaQueryWidth = window.innerWidth;
+      //리사이징 변경 감지
+      if (mediaQueryWidth >= 769) {
+         //pc
+         this.isMobile = false;
+      } else if (mediaQueryWidth < 769) {
+         //mobile
+         this.isMobile = true;
+      }
+      if (this.currentIsMobile !== this.isMobile) {
+         this.changeDevice();
+      }
+   }
+
+   changeDevice() {
+      if (this.isMobile) {
+         this.currentIsMobile = true;
+         this.init();
+         this.whenViewportInit();
+      } else {
+         this.currentIsMobile = false;
+         this.init();
+         this.whenViewportInit();
+      }
    }
 }
