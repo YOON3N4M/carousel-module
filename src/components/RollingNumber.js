@@ -14,11 +14,11 @@ export default class RollingNumber {
       this.setObserver();
       this.targetArr.forEach(
          el =>
-            (el.innerHTML += `<span class="roll-head-text">${
-               el.dataset.headtext !== undefined ? el.dataset.headtext : ""
-            }</span>`),
+            (el.innerHTML += `<span class="roll-head-text">
+            ${el.dataset.headtext !== undefined ? el.dataset.headtext : ""}
+            </span>`),
       );
-      this.targetArr.forEach(target => (target.innerHTML = `<span class="roll-num">0</span>`));
+      this.targetArr.forEach(target => (target.innerHTML = `<span class="roll-num">${0}</span>`));
       this.targetArr.forEach(
          el => (el.innerHTML += `<span class="roll-tail-text">${el.dataset.tailtext}</span>`),
       );
@@ -130,6 +130,7 @@ export default class RollingNumber {
          //mobile
          this.isMobile = true;
       }
+
       if (this.currentIsMobile !== this.isMobile) {
          this.changeDevice();
       }
@@ -143,6 +144,7 @@ export default class RollingNumber {
          this.currentIsMobile = false;
          this.init();
       }
+
       this.isActive = false;
    }
 
