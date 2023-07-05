@@ -106,13 +106,13 @@ export default class RollingNumber {
              ${
                 isLastIndex
                    ? `
-               ${slidesOfNum.map(num => `<span class="roll-num">${num}</span>`).join("")}
-               ${slidesOfNum.map(num => `<span class="roll-num">${num}</span>`).join("")}
-               ${slidesOfNum.map(num => `<span class="roll-num">${num}</span>`).join("")}
-             `
+                      ${slidesOfNum.map(num => `<span class="roll-num">${num}</span>`).join("")}
+                      ${slidesOfNum.map(num => `<span class="roll-num">${num}</span>`).join("")}
+                      ${slidesOfNum.map(num => `<span class="roll-num">${num}</span>`).join("")}
+                      `
                    : `${slidesOfNum.map(num => `<span class="roll-num">${num}</span>`).join("")}
-                   ${slidesOfNum.map(num => `<span class="roll-num">${num}</span>`).join("")}
-                   `
+                      ${slidesOfNum.map(num => `<span class="roll-num">${num}</span>`).join("")}
+                     `
              }
            </div>`;
 
