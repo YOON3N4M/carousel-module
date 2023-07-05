@@ -22,101 +22,12 @@ export default class RollingNumber {
       this.targetArr.forEach(
          el => (el.innerHTML += `<span class="roll-tail-text">${el.dataset.tailtext}</span>`),
       );
-
-      const initialNum = document.querySelector(".roll-num");
-      this.targetArr.forEach(t => (t.style.height = `${initialNum.offsetHeight}px`));
+      const initialNumSpan = document.querySelector(".roll-num");
+      this.targetArr.forEach(t => (t.style.height = `${initialNumSpan.offsetHeight}px`));
+      this.targetArr.forEach(
+         t => (t.style.minWidth = `${initialNumSpan.offsetWidth * t.dataset.value.length}px`),
+      );
       window.addEventListener("resize", () => this.onResizing());
-   }
-
-   whenViewportInit() {
-      //초기 0삭제
-      this.targetArr.forEach(target => target.childNodes[0].remove());
-      this.targetArr.forEach(el => {
-         this.setSlide(el);
-      });
-
-      const numSpan = document.querySelector(".roll-num");
-      this.spanHeight = numSpan.offsetHeight;
-   }
-
-   setObserver() {
-      const observer = new IntersectionObserver(entry => {
-         entry.forEach(entry => {
-            if (entry.isIntersecting && !this.isActive) {
-               setTimeout(() => {
-                  this.isActive = true;
-                  this.whenViewportInit();
-               }, 50);
-            }
-         });
-      });
-      observer.observe(this.container);
-   }
-
-   setSlide(el) {
-      const valueData = el.dataset.value;
-      //쉼표를 적용한 문자열의 배열
-      const replacedValueData = valueData.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",").split("");
-
-      replacedValueData.forEach((item, idx) => {
-         const isDot = item == "," || item == ".";
-         const intItem = parseInt(item);
-         const lastIndex = replacedValueData.length > 1 ? replacedValueData.length - 1 : undefined;
-         const isLastIndex = idx == lastIndex ? true : false;
-         let slidesOfNum = [];
-
-         if (intItem === 0) {
-            slidesOfNum = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-         } else {
-            for (var i = 0; i <= intItem; i++) {
-               slidesOfNum.push(i);
-            }
-         }
-
-         const slideContent = isDot
-            ? `<span class="roll-dot">${item}</span>`
-            : `<div data-value=${item} class="slide ${isLastIndex ? "last-index" : "remain-index"}">
-             ${
-                isLastIndex
-                   ? `
-               ${slidesOfNum.map(num => `<span class="roll-num">${num}</span>`).join("")}
-               ${slidesOfNum.map(num => `<span class="roll-num">${num}</span>`).join("")}
-               ${slidesOfNum.map(num => `<span class="roll-num">${num}</span>`).join("")}
-             `
-                   : slidesOfNum.map(num => `<span class="roll-num">${num}</span>`).join("")
-             }
-           </div>`;
-
-         //머릿말은 없어도 꼬릿말은 고정적으로 있기에 슬라이드는 꼬릿말의 앞쪽에 dom 생성
-         el.lastChild.insertAdjacentHTML(
-            "beforebegin",
-            `<div class="slide-wrapper ${item}">${slideContent}</div>`,
-         );
-
-         if (isDot) return;
-
-         setTimeout(() => {
-            this.animate();
-         }, 0);
-      });
-   }
-
-   animate() {
-      const slideArr = [...document.querySelectorAll(".slide")];
-      const lastSlideArr = slideArr.filter(div => div.className === "slide last-index");
-      const remainSlideArr = slideArr.filter(div => div.className !== "slide last-index");
-
-      remainSlideArr.forEach(slide =>
-         parseInt(slide.dataset.value) === 0
-            ? (slide.style.marginTop = `-${9 * this.spanHeight}px`)
-            : (slide.style.marginTop = `-${parseInt(slide.dataset.value) * this.spanHeight}px`),
-      );
-
-      lastSlideArr.forEach(slide =>
-         parseInt(slide.dataset.value) === 0
-            ? (slide.style.marginTop = `-${29 * this.spanHeight}px`)
-            : (slide.style.marginTop = `-${(parseInt(slide.dataset.value) * 3 + 2) * this.spanHeight}px`),
-      );
    }
 
    onResizing() {
@@ -146,6 +57,95 @@ export default class RollingNumber {
       }
 
       this.isActive = false;
+   }
+
+   setObserver() {
+      const observer = new IntersectionObserver(entry => {
+         entry.forEach(entry => {
+            if (entry.isIntersecting && !this.isActive) {
+               setTimeout(() => {
+                  this.isActive = true;
+                  this.whenViewportInit();
+               }, 50);
+            }
+         });
+      });
+      observer.observe(this.container);
+   }
+
+   whenViewportInit() {
+      //초기 0삭제
+      this.targetArr.forEach(target => target.childNodes[0].remove());
+      this.targetArr.forEach(el => {
+         this.setSlide(el);
+      });
+
+      const numSpan = document.querySelector(".roll-num");
+      this.spanHeight = numSpan.offsetHeight;
+   }
+
+   setSlide(el) {
+      const valueData = el.dataset.value;
+      //쉼표를 적용한 문자열의 배열
+      const replacedValueData = valueData.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",").split("");
+
+      replacedValueData.forEach((item, idx) => {
+         const isDot = item == "," || item == ".";
+         const intItem = parseInt(item);
+         const lastIndex = replacedValueData.length > 1 ? replacedValueData.length - 1 : undefined;
+         const isLastIndex = idx == lastIndex ? true : false;
+         let slidesOfNum = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+
+         if (intItem !== 0) {
+            slidesOfNum.push(intItem);
+         }
+
+         const slideContent = isDot
+            ? `<span class="roll-dot">${item}</span>`
+            : `<div data-value=${item} class="slide ${isLastIndex ? "last-index" : "remain-index"}">
+             ${
+                isLastIndex
+                   ? `
+               ${slidesOfNum.map(num => `<span class="roll-num">${num}</span>`).join("")}
+               ${slidesOfNum.map(num => `<span class="roll-num">${num}</span>`).join("")}
+               ${slidesOfNum.map(num => `<span class="roll-num">${num}</span>`).join("")}
+             `
+                   : `${slidesOfNum.map(num => `<span class="roll-num">${num}</span>`).join("")}
+                   ${slidesOfNum.map(num => `<span class="roll-num">${num}</span>`).join("")}
+                   `
+             }
+           </div>`;
+
+         //머릿말은 없어도 꼬릿말은 고정적으로 있기에 슬라이드는 꼬릿말의 앞쪽에 dom 생성
+         el.lastChild.insertAdjacentHTML(
+            "beforebegin",
+            `<div class="slide-wrapper ${item}">${slideContent}</div>`,
+         );
+
+         if (isDot) return;
+
+         setTimeout(() => {
+            this.animate();
+         }, 0);
+      });
+   }
+
+   animate() {
+      const slideArr = [...document.querySelectorAll(".slide")];
+      const lastSlideArr = slideArr.filter(div => div.className === "slide last-index");
+      const remainSlideArr = slideArr.filter(div => div.className !== "slide last-index");
+
+      remainSlideArr.forEach(slide =>
+         parseInt(slide.dataset.value) === 0
+            ? (slide.style.marginTop = `-${9 * this.spanHeight}px`)
+            : (slide.style.marginTop = `-${21 * this.spanHeight}px`),
+      );
+
+      lastSlideArr.forEach(slide =>
+         parseInt(slide.dataset.value) === 0
+            ? (slide.style.marginTop = `-${29 * this.spanHeight}px`)
+            : (slide.style.marginTop = `-${32 * this.spanHeight}px`),
+      );
    }
 
    /*

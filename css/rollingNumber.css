@@ -21,7 +21,7 @@
    flex-direction: column;
 }
 .remain-index {
-   transition: margin 1.5s cubic-bezier(0.25, 0.1, 0.1, 1);
+   transition: margin 1.6s cubic-bezier(0.2, 0.4, 0.4, 1);
 }
 .last-index {
    transition: margin 1.7s cubic-bezier(1, 0.5, 0.7, 1);
