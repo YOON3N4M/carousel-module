@@ -7,7 +7,9 @@ export default class RollingNumber {
       this.spanHeight;
       this.isMobile;
       this.currentIsMobile;
+      this.slideOptionAboutIndex = [2, 5, 10, 15, 20];
       this.init();
+      this.isUpDirection = false;
    }
 
    init() {
@@ -50,12 +52,11 @@ export default class RollingNumber {
    changeDevice() {
       if (this.isMobile) {
          this.currentIsMobile = true;
-         this.init();
       } else {
          this.currentIsMobile = false;
-         this.init();
       }
-
+      this.init();
+      this.whenViewportInit();
       this.isActive = false;
    }
 
@@ -66,7 +67,7 @@ export default class RollingNumber {
                setTimeout(() => {
                   this.isActive = true;
                   this.whenViewportInit();
-               }, 50);
+               }, 10);
             }
          });
       });
@@ -74,14 +75,24 @@ export default class RollingNumber {
    }
 
    whenViewportInit() {
+      const numSpan = document.querySelector(".roll-num");
+      this.spanHeight = numSpan.offsetHeight;
+
       //초기 0삭제
-      this.targetArr.forEach(target => target.childNodes[0].remove());
+      this.targetArr.forEach(target => (target.innerHTML = ""));
+      this.targetArr.forEach(
+         el =>
+            (el.innerHTML += `<span class="roll-head-text">
+            ${el.dataset.headtext !== undefined ? el.dataset.headtext : ""}
+            </span>`),
+      );
+      this.targetArr.forEach(
+         el => (el.innerHTML += `<span class="roll-tail-text">${el.dataset.tailtext}</span>`),
+      );
+
       this.targetArr.forEach(el => {
          this.setSlide(el);
       });
-
-      const numSpan = document.querySelector(".roll-num");
-      this.spanHeight = numSpan.offsetHeight;
    }
 
    setSlide(el) {
@@ -92,29 +103,36 @@ export default class RollingNumber {
       replacedValueData.forEach((item, idx) => {
          const isDot = item == "," || item == ".";
          const intItem = parseInt(item);
-         const lastIndex = replacedValueData.length > 1 ? replacedValueData.length - 1 : undefined;
-         const isLastIndex = idx == lastIndex ? true : false;
-         let slidesOfNum = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 
-         if (intItem !== 0) {
-            slidesOfNum.push(intItem);
+         let numArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+         let randomNumArr = [];
+         let slideNumArr = [];
+
+         for (var i = 0; i <= this.slideOptionAboutIndex[idx]; i++) {
+            let randomNumber = numArr[Math.floor(Math.random() * numArr.length)];
+            randomNumArr.push(randomNumber);
          }
+
+         this.isUpDirection ? randomNumArr.unshift(intItem) : randomNumArr.push(intItem);
+
+         console.log(randomNumArr);
+         // slideNumArr.push(intItem);
+
+         /* 
+         for (var it = idx + 1; it <= this.slideOptionAboutIndex[idx]; it++) {
+            numTempArr.map(number => slideNumArr.push(number));
+         }
+         for (var i = intItem; i > intItem - 2; i--) {
+            for (var it = idx + 1; it <= slideOptionAboutIndex[idx]; it++) {
+               slideNumArr.push(i);
+            }
+    */
 
          const slideContent = isDot
             ? `<span class="roll-dot">${item}</span>`
-            : `<div data-value=${item} class="slide ${isLastIndex ? "last-index" : "remain-index"}">
-             ${
-                isLastIndex
-                   ? `
-                      ${slidesOfNum.map(num => `<span class="roll-num">${num}</span>`).join("")}
-                      ${slidesOfNum.map(num => `<span class="roll-num">${num}</span>`).join("")}
-                      ${slidesOfNum.map(num => `<span class="roll-num">${num}</span>`).join("")}
-                      `
-                   : `${slidesOfNum.map(num => `<span class="roll-num">${num}</span>`).join("")}
-                      ${slidesOfNum.map(num => `<span class="roll-num">${num}</span>`).join("")}
-                     `
-             }
-           </div>`;
+            : `<div data-value=${item} data-index=${idx} class="slide">
+                  ${randomNumArr.map(number => `<span class="roll-num">${number}</span>`).join("")}
+               </div>`;
 
          //머릿말은 없어도 꼬릿말은 고정적으로 있기에 슬라이드는 꼬릿말의 앞쪽에 dom 생성
          el.lastChild.insertAdjacentHTML(
@@ -123,29 +141,54 @@ export default class RollingNumber {
          );
 
          if (isDot) return;
-
-         setTimeout(() => {
-            this.animate();
-         }, 0);
       });
+
+      setTimeout(() => {
+         this.animate();
+      }, 100);
    }
 
    animate() {
       const slideArr = [...document.querySelectorAll(".slide")];
-      const lastSlideArr = slideArr.filter(div => div.className === "slide last-index");
-      const remainSlideArr = slideArr.filter(div => div.className !== "slide last-index");
 
-      remainSlideArr.forEach(slide =>
-         parseInt(slide.dataset.value) === 0
-            ? (slide.style.marginTop = `-${9 * this.spanHeight}px`)
-            : (slide.style.marginTop = `-${21 * this.spanHeight}px`),
-      );
+      slideArr.forEach((slide, i) => {
+         const numberIndex = parseInt(slide.dataset.index);
+         switch (numberIndex) {
+            case 0:
+               slide.style.marginTop = `${this.isUpDirection ? `+` : `-`}${
+                  (this.slideOptionAboutIndex[0] + 1) * this.spanHeight
+               }px`;
+               break;
+            case 1:
+               slide.style.marginTop = `${this.isUpDirection ? `+` : `-`}${
+                  (this.slideOptionAboutIndex[1] + 1) * this.spanHeight
+               }px`;
+               break;
+            case 2:
+               slide.style.marginTop = `${this.isUpDirection ? `+` : `-`}${
+                  (this.slideOptionAboutIndex[2] + 1) * this.spanHeight
+               }px`;
+               break;
+            case 3:
+               slide.style.marginTop = `${this.isUpDirection ? `+` : `-`}${
+                  (this.slideOptionAboutIndex[3] + 1) * this.spanHeight
+               }px`;
+               break;
+            case 4:
+               slide.style.marginTop = `${this.isUpDirection ? `+` : `-`}${
+                  (this.slideOptionAboutIndex[4] + 1) * this.spanHeight
+               }px`;
+               break;
+         }
+      });
 
+      /* 
       lastSlideArr.forEach(slide =>
          parseInt(slide.dataset.value) === 0
-            ? (slide.style.marginTop = `-${29 * this.spanHeight}px`)
-            : (slide.style.marginTop = `-${32 * this.spanHeight}px`),
+            ? (slide.style.marginTop = `-${1 * this.spanHeight}px`)
+            : (slide.style.marginTop = `-${1 * this.spanHeight}px`),
       );
+   */
    }
 
    /*

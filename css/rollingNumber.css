@@ -15,10 +15,12 @@
    border-bottom: 1px solid black;
    color: white;
    margin-right: 10px;
+   border-right: 1px solid rgba(255, 255, 255, 0.541);
 }
 .slide {
    display: flex;
    flex-direction: column;
+   transition: margin 1.7s ease;
 }
 .remain-index {
    transition: margin 1.6s cubic-bezier(0.2, 0.4, 0.4, 1);
