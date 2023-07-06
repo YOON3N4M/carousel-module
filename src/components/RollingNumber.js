@@ -7,34 +7,57 @@ export default class RollingNumber {
       this.spanHeight;
       this.isMobile;
       this.currentIsMobile;
-      this.slideOptionAboutIndex = [2, 5, 10, 15, 20];
+      this.slideOptionAboutIndex = [2, 5, 10, 15, 22];
+      this.isInit = false;
       this.init();
-      this.isUpDirection = false;
+      this.isToDown = false;
    }
 
    init() {
       this.setObserver();
-      this.targetArr.forEach(
-         el =>
-            (el.innerHTML += `<span class="roll-head-text">
-            ${el.dataset.headtext !== undefined ? el.dataset.headtext : ""}
-            </span>`),
-      );
-      this.targetArr.forEach(target => (target.innerHTML = `<span class="roll-num">${0}</span>`));
-      this.targetArr.forEach(
-         el => (el.innerHTML += `<span class="roll-tail-text">${el.dataset.tailtext}</span>`),
-      );
+      this.setTemplate();
       const initialNumSpan = document.querySelector(".roll-num");
       this.targetArr.forEach(t => (t.style.height = `${initialNumSpan.offsetHeight}px`));
       this.targetArr.forEach(
          t => (t.style.minWidth = `${initialNumSpan.offsetWidth * t.dataset.value.length}px`),
       );
       window.addEventListener("resize", () => this.onResizing());
+      this.isInit = true;
+   }
+
+   setTemplate() {
+      this.targetArr.forEach(
+         el =>
+            (el.innerHTML += `<span class="roll-head-text">
+            ${el.dataset.headtext !== undefined ? el.dataset.headtext : ""}
+            </span>`),
+      );
+      //첫 실행시에만 0 추가
+      if (this.isInit === false) {
+         this.targetArr.forEach(target => (target.innerHTML = `<span class="roll-num">${0}</span>`));
+      }
+      this.targetArr.forEach(
+         el => (el.innerHTML += `<span class="roll-tail-text">${el.dataset.tailtext}</span>`),
+      );
+   }
+
+   setObserver() {
+      const observer = new IntersectionObserver(entry => {
+         entry.forEach(entry => {
+            if (entry.isIntersecting && !this.isActive) {
+               setTimeout(() => {
+                  this.isActive = true;
+                  this.whenViewportInit();
+               }, 10);
+            }
+         });
+      });
+      observer.observe(this.container);
    }
 
    onResizing() {
       const mediaQueryWidth = window.innerWidth;
-      console.log(mediaQueryWidth);
+
       //리사이징 변경 감지
       if (mediaQueryWidth >= 769) {
          //pc
@@ -60,36 +83,13 @@ export default class RollingNumber {
       this.isActive = false;
    }
 
-   setObserver() {
-      const observer = new IntersectionObserver(entry => {
-         entry.forEach(entry => {
-            if (entry.isIntersecting && !this.isActive) {
-               setTimeout(() => {
-                  this.isActive = true;
-                  this.whenViewportInit();
-               }, 10);
-            }
-         });
-      });
-      observer.observe(this.container);
-   }
-
    whenViewportInit() {
       const numSpan = document.querySelector(".roll-num");
       this.spanHeight = numSpan.offsetHeight;
 
       //초기 0삭제
       this.targetArr.forEach(target => (target.innerHTML = ""));
-      this.targetArr.forEach(
-         el =>
-            (el.innerHTML += `<span class="roll-head-text">
-            ${el.dataset.headtext !== undefined ? el.dataset.headtext : ""}
-            </span>`),
-      );
-      this.targetArr.forEach(
-         el => (el.innerHTML += `<span class="roll-tail-text">${el.dataset.tailtext}</span>`),
-      );
-
+      this.setTemplate();
       this.targetArr.forEach(el => {
          this.setSlide(el);
       });
@@ -106,31 +106,17 @@ export default class RollingNumber {
 
          let numArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
          let randomNumArr = [];
-         let slideNumArr = [];
 
          for (var i = 0; i <= this.slideOptionAboutIndex[idx]; i++) {
             let randomNumber = numArr[Math.floor(Math.random() * numArr.length)];
             randomNumArr.push(randomNumber);
          }
 
-         this.isUpDirection ? randomNumArr.unshift(intItem) : randomNumArr.push(intItem);
-
-         console.log(randomNumArr);
-         // slideNumArr.push(intItem);
-
-         /* 
-         for (var it = idx + 1; it <= this.slideOptionAboutIndex[idx]; it++) {
-            numTempArr.map(number => slideNumArr.push(number));
-         }
-         for (var i = intItem; i > intItem - 2; i--) {
-            for (var it = idx + 1; it <= slideOptionAboutIndex[idx]; it++) {
-               slideNumArr.push(i);
-            }
-    */
+         this.isToDown ? randomNumArr.unshift(intItem) : randomNumArr.push(intItem);
 
          const slideContent = isDot
             ? `<span class="roll-dot">${item}</span>`
-            : `<div data-value=${item} data-index=${idx} class="slide">
+            : `<div data-value=${item} data-index=${idx} class="roll-slide">
                   ${randomNumArr.map(number => `<span class="roll-num">${number}</span>`).join("")}
                </div>`;
 
@@ -149,57 +135,39 @@ export default class RollingNumber {
    }
 
    animate() {
-      const slideArr = [...document.querySelectorAll(".slide")];
+      const slideArr = [...document.querySelectorAll(".roll-slide")];
 
       slideArr.forEach((slide, i) => {
          const numberIndex = parseInt(slide.dataset.index);
+         const direction = this.isToDown ? `+` : `-`;
+
          switch (numberIndex) {
             case 0:
-               slide.style.marginTop = `${this.isUpDirection ? `+` : `-`}${
+               slide.style.marginTop = `${direction}${
                   (this.slideOptionAboutIndex[0] + 1) * this.spanHeight
                }px`;
                break;
             case 1:
-               slide.style.marginTop = `${this.isUpDirection ? `+` : `-`}${
+               slide.style.marginTop = `${direction}${
                   (this.slideOptionAboutIndex[1] + 1) * this.spanHeight
                }px`;
                break;
             case 2:
-               slide.style.marginTop = `${this.isUpDirection ? `+` : `-`}${
+               slide.style.marginTop = `${direction}${
                   (this.slideOptionAboutIndex[2] + 1) * this.spanHeight
                }px`;
                break;
             case 3:
-               slide.style.marginTop = `${this.isUpDirection ? `+` : `-`}${
+               slide.style.marginTop = `${direction}${
                   (this.slideOptionAboutIndex[3] + 1) * this.spanHeight
                }px`;
                break;
             case 4:
-               slide.style.marginTop = `${this.isUpDirection ? `+` : `-`}${
+               slide.style.marginTop = `${direction}${
                   (this.slideOptionAboutIndex[4] + 1) * this.spanHeight
                }px`;
                break;
          }
       });
-
-      /* 
-      lastSlideArr.forEach(slide =>
-         parseInt(slide.dataset.value) === 0
-            ? (slide.style.marginTop = `-${1 * this.spanHeight}px`)
-            : (slide.style.marginTop = `-${1 * this.spanHeight}px`),
-      );
-   */
    }
-
-   /*
-   animate() {
-      const slideArr = [...document.querySelectorAll(".slide")];
-   
-      slideArr.forEach(slide =>
-         parseInt(slide.dataset.value) === 0
-            ? (slide.style.marginTop = `-${29 * this.spanHeight}px`)
-            : (slide.style.marginTop = `-${(parseInt(slide.dataset.value) * 3 + 2) * this.spanHeight}px`),
-      );
-   }
-   */
 }

@@ -17,21 +17,17 @@
    margin-right: 10px;
    border-right: 1px solid rgba(255, 255, 255, 0.541);
 }
-.slide {
+.roll-slide {
    display: flex;
    flex-direction: column;
-   transition: margin 1.7s ease;
+   transition: margin 2.5s ease;
 }
-.remain-index {
-   transition: margin 1.6s cubic-bezier(0.2, 0.4, 0.4, 1);
-}
-.last-index {
-   transition: margin 1.7s cubic-bezier(1, 0.5, 0.7, 1);
-}
+
 .roll-tail-text,
 .roll-head-text,
 .roll-dot,
-.roll-num {
+.roll-num,
+.roll-num-zero {
    font-size: 2rem;
 }
 .blank {
