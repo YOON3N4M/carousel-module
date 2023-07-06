@@ -7,9 +7,10 @@ export default class RollingNumber {
       this.spanHeight;
       this.isMobile;
       this.currentIsMobile;
-      this.slideOptionAboutIndex = [2, 5, 10, 15, 22];
+      this.slideOptionAboutIndex = [2, 5, 10, 15, 22, 25];
       this.isInit = false;
       this.init();
+      // 이 부분 false 면 숫자가 위로 돌아가고, true면 아래로 돌아감
       this.isToDown = false;
    }
 
@@ -125,8 +126,6 @@ export default class RollingNumber {
             "beforebegin",
             `<div class="slide-wrapper ${item}">${slideContent}</div>`,
          );
-
-         if (isDot) return;
       });
 
       setTimeout(() => {
@@ -137,37 +136,13 @@ export default class RollingNumber {
    animate() {
       const slideArr = [...document.querySelectorAll(".roll-slide")];
 
-      slideArr.forEach((slide, i) => {
+      slideArr.forEach(slide => {
          const numberIndex = parseInt(slide.dataset.index);
          const direction = this.isToDown ? `+` : `-`;
 
-         switch (numberIndex) {
-            case 0:
-               slide.style.marginTop = `${direction}${
-                  (this.slideOptionAboutIndex[0] + 1) * this.spanHeight
-               }px`;
-               break;
-            case 1:
-               slide.style.marginTop = `${direction}${
-                  (this.slideOptionAboutIndex[1] + 1) * this.spanHeight
-               }px`;
-               break;
-            case 2:
-               slide.style.marginTop = `${direction}${
-                  (this.slideOptionAboutIndex[2] + 1) * this.spanHeight
-               }px`;
-               break;
-            case 3:
-               slide.style.marginTop = `${direction}${
-                  (this.slideOptionAboutIndex[3] + 1) * this.spanHeight
-               }px`;
-               break;
-            case 4:
-               slide.style.marginTop = `${direction}${
-                  (this.slideOptionAboutIndex[4] + 1) * this.spanHeight
-               }px`;
-               break;
-         }
+         slide.style.marginTop = `${direction}${
+            (this.slideOptionAboutIndex[numberIndex] + 1) * this.spanHeight
+         }px`;
       });
    }
 }
