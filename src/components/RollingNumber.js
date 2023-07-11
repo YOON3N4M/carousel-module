@@ -12,20 +12,10 @@ export default class RollingNumber {
    }
 
    init() {
-      this.setObserver();
       this.setTemplate();
-      const initialSpan = document.querySelector(".roll-tail-text");
-      //해당 부분도 따로 분리 예정
-      this.el.style.height = `${initialSpan.offsetHeight}px`;
-      this.el.style.minWidth = `${initialSpan.offsetWidth * this.el.dataset.value.length}px`;
-
+      this.setObserver();
+      this.setDomStyle();
       window.addEventListener("resize", () => this.onResizing());
-   }
-
-   setTemplate() {
-      // prettier-ignore
-      this.el.innerHTML += `<span class="roll-head-text">${this.el.dataset.headtext !== undefined ? this.el.dataset.headtext : ""}</span>`;
-      this.el.innerHTML += `<span class="roll-tail-text">${this.el.dataset.tailtext}</span>`;
    }
 
    setObserver() {
@@ -39,6 +29,25 @@ export default class RollingNumber {
          });
       });
       this.observer.observe(this.el);
+   }
+
+   setTemplate() {
+      // prettier-ignore
+      const headTextEl = `<span class="roll-head-text">${this.el.dataset.headtext !== undefined ? this.el.dataset.headtext : ""}</span>`;
+      const tailTextEl = `<span class="roll-tail-text">${this.el.dataset.tailtext}</span>`;
+      this.el.insertAdjacentHTML("afterbegin", tailTextEl);
+      //이 부분에 setSlide
+      this.el.insertAdjacentHTML("afterbegin", headTextEl);
+      this.setSlide(this.el);
+   }
+
+   slideListHTML() {}
+   setDomStyle() {
+      const initialSpan = document.querySelector(".roll-tail-text");
+      //해당 부분도 따로 분리 예정
+      this.el.style.height = `${initialSpan.offsetHeight}px`;
+      this.el.style.minWidth = `${initialSpan.offsetWidth * this.el.dataset.value.length}px`;
+      this.spanHeight = initialSpan.offsetHeight;
    }
 
    onResizing() {
@@ -58,26 +67,18 @@ export default class RollingNumber {
       }
    }
 
-   changeDevice() {
-      if (this.isMobile) {
-         this.currentIsMobile = true;
-      } else {
-         this.currentIsMobile = false;
-      }
-      this.init();
-      this.whenViewportInit();
-   }
-
    whenViewportInit() {
-      const initialSpan = document.querySelector(".roll-tail-text");
-      this.spanHeight = initialSpan.offsetHeight;
-      this.setSlide(this.el);
+      setTimeout(() => {
+         this.animate();
+      }, 100);
+      //한번 실행한뒤 옵저버 제거
       this.observer.disconnect();
    }
 
    setSlide(el) {
       const valueData = el.dataset.value;
       //쉼표를 적용한 문자열의 배열
+      console.log(parseInt(valueData));
       const replacedValueData = valueData.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",").split("");
 
       replacedValueData.forEach((item, idx) => {
@@ -103,10 +104,6 @@ export default class RollingNumber {
          //머릿말은 없어도 꼬릿말은 고정적으로 있기에 슬라이드는 꼬릿말의 앞쪽에 dom 생성
          el.lastChild.insertAdjacentHTML("beforebegin", `${slideContent}`);
       });
-
-      setTimeout(() => {
-         this.animate();
-      }, 100);
    }
 
    animate() {
