@@ -9,7 +9,7 @@ class App {
    constructor() {
       const testCarousel = document.querySelector(".test");
       const overlayImage = document.querySelector(".overlay-image-container");
-      const rollingNumberContainer = document.querySelector(".rollingNumber");
+      const rollingNumberContainerArr = [...document.querySelectorAll('[data-animation="rollingNumber"]')];
 
       const testOption = {
          data: last,
@@ -23,9 +23,11 @@ class App {
          },
       };
 
-      //  new NewCarousel(testCarousel, testOption);
       new OverlayImage(overlayImage);
-      new RollingNumber(rollingNumberContainer);
+      rollingNumberContainerArr.map(el => new RollingNumber(el));
+
+      //  new NewCarousel(testCarousel, testOption);
+      // new RollingNumber(rollingNumberContainer);
    }
 }
 
