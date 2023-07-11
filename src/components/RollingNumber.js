@@ -1,7 +1,6 @@
 export default class RollingNumber {
    constructor(el) {
       this.el = el;
-      this.isActive = false;
       this.spanHeight;
       this.isMobile;
       this.currentIsMobile;
@@ -9,6 +8,7 @@ export default class RollingNumber {
       this.init();
       // 이 부분 false 면 숫자가 위로 돌아가고, true면 아래로 돌아감
       this.isToDown = false;
+      this.observer;
    }
 
    init() {
@@ -29,17 +29,16 @@ export default class RollingNumber {
    }
 
    setObserver() {
-      const observer = new IntersectionObserver(entry => {
+      this.observer = new IntersectionObserver(entry => {
          entry.forEach(entry => {
-            if (entry.isIntersecting && !this.isActive) {
+            if (entry.isIntersecting) {
                setTimeout(() => {
-                  this.isActive = true;
                   this.whenViewportInit();
                }, 10);
             }
          });
       });
-      observer.observe(this.el);
+      this.observer.observe(this.el);
    }
 
    onResizing() {
@@ -67,17 +66,13 @@ export default class RollingNumber {
       }
       this.init();
       this.whenViewportInit();
-      this.isActive = false;
    }
 
    whenViewportInit() {
       const initialSpan = document.querySelector(".roll-tail-text");
       this.spanHeight = initialSpan.offsetHeight;
-
-      //초기 0삭제
-      this.el.innerHTML = "";
-      this.setTemplate();
       this.setSlide(this.el);
+      this.observer.disconnect();
    }
 
    setSlide(el) {
