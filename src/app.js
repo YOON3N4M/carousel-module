@@ -9,18 +9,23 @@ class App {
    constructor() {
       const testCarousel = document.querySelector(".test");
       const overlayImage = document.querySelector(".overlay-image-container");
-      const rollingNumberContainer = document.querySelector(".roll");
+      const rollingNumberContainer = document.querySelector(".rollingNumber");
 
       const testOption = {
          data: last,
          width: testCarousel.dataset.width,
          isResponsive: true,
-         deviceOption: { pcSlidesPerView: 4, pcSlidesPerGroup: 3, mobileSlidesPerView: 5, mobileSlidesPerGroup: 4 },
+         deviceOption: {
+            pcSlidesPerView: 4,
+            pcSlidesPerGroup: 3,
+            mobileSlidesPerView: 5,
+            mobileSlidesPerGroup: 4,
+         },
       };
 
       //  new NewCarousel(testCarousel, testOption);
       new OverlayImage(overlayImage);
-      new RollingNumber(rollingNumberContainer, 19621);
+      new RollingNumber(rollingNumberContainer);
    }
 }
 

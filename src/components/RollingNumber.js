@@ -1,14 +1,11 @@
 export default class RollingNumber {
-   constructor() {
-      this.container = document.querySelector(".rolling-number-container");
-      this.targetArr = [...document.querySelectorAll('[data-animation="rollingNumber"]')];
-      //쉼표 적용을 위해 문자열로 변환
+   constructor(el) {
+      this.el = el;
       this.isActive = false;
       this.spanHeight;
       this.isMobile;
       this.currentIsMobile;
       this.slideOptionAboutIndex = [2, 5, 10, 15, 22, 25];
-      this.isInit = false;
       this.init();
       // 이 부분 false 면 숫자가 위로 돌아가고, true면 아래로 돌아감
       this.isToDown = false;
@@ -17,29 +14,18 @@ export default class RollingNumber {
    init() {
       this.setObserver();
       this.setTemplate();
-      const initialNumSpan = document.querySelector(".roll-num");
-      this.targetArr.forEach(t => (t.style.height = `${initialNumSpan.offsetHeight}px`));
-      this.targetArr.forEach(
-         t => (t.style.minWidth = `${initialNumSpan.offsetWidth * t.dataset.value.length}px`),
-      );
+      const initialSpan = document.querySelector(".roll-tail-text");
+      //해당 부분도 따로 분리 예정
+      this.el.style.height = `${initialSpan.offsetHeight}px`;
+      this.el.style.minWidth = `${initialSpan.offsetWidth * this.el.dataset.value.length}px`;
+
       window.addEventListener("resize", () => this.onResizing());
-      this.isInit = true;
    }
 
    setTemplate() {
-      this.targetArr.forEach(
-         el =>
-            (el.innerHTML += `<span class="roll-head-text">
-            ${el.dataset.headtext !== undefined ? el.dataset.headtext : ""}
-            </span>`),
-      );
-      //첫 실행시에만 0 추가
-      if (this.isInit === false) {
-         this.targetArr.forEach(target => (target.innerHTML = `<span class="roll-num">${0}</span>`));
-      }
-      this.targetArr.forEach(
-         el => (el.innerHTML += `<span class="roll-tail-text">${el.dataset.tailtext}</span>`),
-      );
+      // prettier-ignore
+      this.el.innerHTML += `<span class="roll-head-text">${this.el.dataset.headtext !== undefined ? this.el.dataset.headtext : ""}</span>`;
+      this.el.innerHTML += `<span class="roll-tail-text">${this.el.dataset.tailtext}</span>`;
    }
 
    setObserver() {
@@ -53,7 +39,7 @@ export default class RollingNumber {
             }
          });
       });
-      observer.observe(this.container);
+      observer.observe(this.el);
    }
 
    onResizing() {
@@ -85,15 +71,13 @@ export default class RollingNumber {
    }
 
    whenViewportInit() {
-      const numSpan = document.querySelector(".roll-num");
-      this.spanHeight = numSpan.offsetHeight;
+      const initialSpan = document.querySelector(".roll-tail-text");
+      this.spanHeight = initialSpan.offsetHeight;
 
       //초기 0삭제
-      this.targetArr.forEach(target => (target.innerHTML = ""));
+      this.el.innerHTML = "";
       this.setTemplate();
-      this.targetArr.forEach(el => {
-         this.setSlide(el);
-      });
+      this.setSlide(this.el);
    }
 
    setSlide(el) {
@@ -122,10 +106,7 @@ export default class RollingNumber {
                </div>`;
 
          //머릿말은 없어도 꼬릿말은 고정적으로 있기에 슬라이드는 꼬릿말의 앞쪽에 dom 생성
-         el.lastChild.insertAdjacentHTML(
-            "beforebegin",
-            `<div class="slide-wrapper ${item}">${slideContent}</div>`,
-         );
+         el.lastChild.insertAdjacentHTML("beforebegin", `${slideContent}`);
       });
 
       setTimeout(() => {
