@@ -32,22 +32,23 @@ export default class RollingNumber {
    }
 
    setTemplate() {
-      // prettier-ignore
       const HTMLTemp = `
-      <span class="roll-head-text">${this.el.dataset.headtext || ""}</span> 
-      ${this.setSlide()}
-      <span class="roll-tail-text">${this.el.dataset.tailtext}</span>`
+            <span class="roll-head-text">
+               ${this.el.dataset.headtext || ""}
+            </span> 
+               ${this.setSlide()}
+            <span class="roll-tail-text">
+               ${this.el.dataset.tailtext}
+            </span>
+             `
 
       this.el.insertAdjacentHTML("afterbegin", HTMLTemp);
-
-      //this.el.insertAdjacentHTML("afterbegin", headTextEl);
-      // this.setSlide();
       this.sliderArr = [...document.querySelectorAll(".roll-slide")];
    }
 
    setSlide() {
       const valueData = this.el.dataset.value;
-      let slideHTMLarr = "";
+      let slideHTMLTemp = "";
       //쉼표를 적용한 문자열의 배열
       const replacedValueData = valueData.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",").split("");
       replacedValueData.forEach((item, idx) => {
@@ -62,20 +63,24 @@ export default class RollingNumber {
 
          this.isToDown ? randomNumArr.unshift(intItem) : randomNumArr.push(intItem);
 
-         // prettier-ignore
          const slideContent = isDot
-            ? `<span class="roll-dot">${item}</span>`
-            : `<div data-value="${item}" data-index="${idx}" class="roll-slide">
-                  ${randomNumArr.map((number) =>
+            ? 
+            `<span class="roll-dot">
+              ${item}
+            </span>`
+            : 
+            `<div data-value="${item}" data-index="${idx}" class="roll-slide">
+                  ${
+                     randomNumArr.map((number) =>
                       `<span class="roll-num">${number}</span>`).join("")
-                     }
-               </div>`;
+                  }
+            </div>`;
          //머릿말은 없어도 꼬릿말은 고정적으로 있기에 슬라이드는 꼬릿말의 앞쪽에 dom 생성
          // this.el.lastChild.insertAdjacentHTML("beforebegin", `${slideContent}`);
-         slideHTMLarr += slideContent
+         slideHTMLTemp += slideContent
       });
 
-      return slideHTMLarr
+      return slideHTMLTemp
    }
 
    setDomStyle() {
@@ -98,7 +103,10 @@ export default class RollingNumber {
       this.setDomStyle();
       this.sliderArr.forEach(
          slide => (
-            slide.style.transition = `transform 0s ease`, slide.style.transform = `translateY(${0}px)`
+            slide.style = `
+            transition: none; 
+            transform : translateY(${0}px);
+            `
          ),
       );
 
@@ -115,13 +123,15 @@ export default class RollingNumber {
    }
 
    animate() {
-      this.sliderArr.forEach(slide => (slide.style.transition = `transform 2.5s ease`));
       this.sliderArr.forEach(slide => {
          const numberIndex = parseInt(slide.dataset.index);
          const direction = this.isToDown ? `+` : `-`;
-         slide.style.transform = `translateY(${direction}${
-            ((this.slideOptionAboutIndex[numberIndex] + 1) * this.spanHeight) / 2
-         }px)`;
+         slide.style = `
+         transition: transform 2.5s ease;
+         transform: translateY(
+            ${direction}${((this.slideOptionAboutIndex[numberIndex] + 1) * this.spanHeight) / 2
+         }px);
+         `
       });
    }
 }
